@@ -48,6 +48,7 @@ const CompensationEditModal = ({
           effectiveDate: moment(values.effectiveDate),
           defaultHours: values.defaultHours,
           reasonofChange: values.reasonofChange,
+          // status: false
         };
         const result = await updateCompansationDetail(token, {
           ...obj,
@@ -80,7 +81,7 @@ const CompensationEditModal = ({
               {getFieldDecorator("jobTitle", {
                 rules: [{ required: true, message: "Please input job title!" }],
               })(
-                <SelectJob selected={compensation.jobTitle}/>
+                <SelectJob selected={compensation.jobTitle} />
               )}
             </FormItem>
           </Col>
@@ -91,7 +92,7 @@ const CompensationEditModal = ({
                   { required: true, message: "Please select department!" },
                 ],
               })(
-               <SelectDepartment selected={compensation.department}/>
+                <SelectDepartment selected={compensation.department} />
               )}
             </FormItem>
           </Col>
@@ -101,7 +102,7 @@ const CompensationEditModal = ({
                 rules: [
                   { required: true, message: "Please select effective date!" },
                 ],
-              })(<DatePicker style={{ width: "100%" }} />)}
+              })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
             </FormItem>
           </Col>
           <Col span={12} xs={24} md={12}>

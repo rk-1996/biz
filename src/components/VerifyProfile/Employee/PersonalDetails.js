@@ -25,7 +25,7 @@ const PersonalDetails = (props) => {
   useEffect(() => {
     if (formValues) {
       setFieldsValue({
-        dob: moment(formValues.dob, "YYYY-MM-DD"),
+        dob: moment(formValues.dob, "DD-MM-YYYY"),
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         middleName: formValues.middleName,
@@ -57,7 +57,7 @@ const PersonalDetails = (props) => {
         Object.keys(emergencyInfo).forEach(key => emergencyInfo[key] === undefined && delete emergencyInfo[key]);
 
         let newObj = {
-          dob: moment(values.dob._d).format("YYYY-MM-DD"),
+          dob: moment(values.dob._d).format("DD-MM-YYYY"),
           firstName: values.firstName,
           lastName: values.lastName,
           middleName: values.middleName ? values.middleName : undefined,
@@ -146,7 +146,8 @@ const PersonalDetails = (props) => {
                     })(
                       <DatePicker
                         style={{ width: "100%" }}
-                        format="YYYY-MM-DD"
+                        // format="YYYY-MM-DD"
+                        format={'DD-MM-YYYY'}
                       />
                     )}
                   </FormItem>

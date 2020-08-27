@@ -14,6 +14,7 @@ import {
 import { withRouter } from "react-router-dom";
 import stateList from "./../../../util/State";
 import { getValidPin } from './../../../services/people';
+import moment from 'moment';
 var randomize = require('randomatic');
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -110,7 +111,7 @@ const Basics = (props) => {
           <FormItem label="Date of birth" className="display-block">
             {getFieldDecorator("dob", {
               rules: [{ required: true, message: "Please input birthdate!" }],
-            })(<DatePicker style={{ width: "100%" }} />)}
+            })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
           </FormItem>
         </Col>
         <Col span={8} xs={24} md={8}>

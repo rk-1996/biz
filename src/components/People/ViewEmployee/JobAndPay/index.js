@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Button, Popconfirm, Switch } from "antd";
+import { Button, Popconfirm, Switch, message } from "antd";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import EmployeeMentDetail from "./EmployeeMentDetail";
 import Compensation from "./Compensation";
-import { getEmployeeCompesastion } from "services/people";
+import moment from "moment";
+import { getEmployeeCompesastion, getCompansationHistory, updateCompansationDetail, editCompanyStatusForEmployee } from "services/people";
+import CircularProgress from "components/CircularProgress/index";
 
 const JobsAndPay = ({
   activeCompany,
@@ -17,8 +19,9 @@ const JobsAndPay = ({
 }) => {
   const { params } = match;
   const [compensation, setCompesastion] = useState(null);
-  const dismissEmployeeHandler = () => {};
-
+  const dismissEmployeeHandler = () => { };
+  const [statusCompany, setStatusCompany] = useState()
+  const [loaderChangeStatus, setLoaderChangeStatus] = useState(false)
   const getCompesastionDetails = async () => {
     try {
       const data = {
@@ -32,16 +35,53 @@ const JobsAndPay = ({
       );
       if (result && result.status === 200) {
         setCompesastion(result.data);
+        setStatusCompany(result.data[0].status)
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
     getCompesastionDetails();
   }, []);
 
-  const toggleLocationStatus = (e) => {
+  const toggleLocationStatus = async (e) => {
+    try {
+      setLoaderChangeStatus(true)
+      console.log(compensation)
+      const obj = {
+        jobTitle: compensation[0].jobTitle,
+        department: compensation[0].department,
+        type: compensation[0].type,
+        rate: compensation[0].rate,
+        per: compensation[0].per,
+        effectiveDate: moment(compensation[0].effectiveDate),
+        defaultHours: compensation[0].defaultHours,
+        reasonofChange: compensation[0].reasonofChange,
+        status: e
+      };
+      const resultUpdateStatus = await updateCompansationDetail(authUser.tokens.accessToken, {
+        ...obj,
+        id: params.id,
+        location: activeCompany.location,
+        company: activeCompany.company,
+        actionType: "employee",
+      });
+      if (resultUpdateStatus.status === 200) {
+        setLoaderChangeStatus(false)
+        message.success("Status changed successfully..")
+        setStatusCompany(e)
+      } else {
+        setLoaderChangeStatus(false)
 
+        message.error("Something went wrong..")
+      }
+    } catch (error) {
+      setLoaderChangeStatus(false)
+
+      message.error(error)
+    }
+
+    console.log(e)
   }
 
   const updateCompensation = () => {
@@ -54,34 +94,42 @@ const JobsAndPay = ({
         compensation.map((c, i) => {
           return (
             <div className="company-level-container">
-              <div className="flex-x align-center gx-pt-1 gx-pb-4">
-                <div>
-                  <Switch checked={c.status} onChange={toggleLocationStatus}/>
-                </div>
-                <div className="gx-ml-2">{c.locationName}</div>
-              </div>
+              {
+                loaderChangeStatus ? <div className="gx-loader-view">
+                  <CircularProgress />
+                </div> :
+                  <>
 
-              <div key={i}>
-                {/* Employee Details */}
-                <EmployeeMentDetail
-                  params={params}
-                  token={authUser.tokens.accessToken}
-                  employeeData={employeeData}
-                  updateSavedObj={updateCompensation}
-                  employment={c.employment}
-                  activeCompany={activeCompany}
-                />
-                {/* Compensation */}
-                <Compensation
-                  params={params}
-                  token={authUser.tokens.accessToken}
-                  updateSavedObj={updateCompensation}
-                  jobs={jobs}
-                  departments={departments}
-                  activeCompany={activeCompany}
-                  compensation={c}
-                />
-              </div>
+                    <div className="flex-x align-center gx-pt-1 gx-pb-4">
+                      <div>
+                        <Switch checked={statusCompany} onChange={toggleLocationStatus} />
+                      </div>
+                      <div className="gx-ml-2">{c.locationName}</div>
+                    </div>
+
+                    <div key={i}>
+                      {/* Employee Details */}
+                      <EmployeeMentDetail
+                        params={params}
+                        token={authUser.tokens.accessToken}
+                        employeeData={employeeData}
+                        updateSavedObj={updateCompensation}
+                        employment={c.employment}
+                        activeCompany={activeCompany}
+                      />
+                      {/* Compensation */}
+                      <Compensation
+                        params={params}
+                        token={authUser.tokens.accessToken}
+                        updateSavedObj={updateCompensation}
+                        jobs={jobs}
+                        departments={departments}
+                        activeCompany={activeCompany}
+                        compensation={c}
+                      />
+                    </div>
+                  </>
+              }
             </div>
           );
         })}

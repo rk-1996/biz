@@ -3,9 +3,10 @@ import { Input, Button, Modal, message } from "antd";
 import NumberKeyboard from "components/PunchClock/NumberKeyboard";
 import { getPeople, getLoginPeopleData } from './../../services/punchClock';
 import CircularProgress from "components/CircularProgress/index";
+import moment from "moment";
 
 const ClockPin = (props) => {
-  const { setCurrentTab, currentLocation, setLastACtivityStatusArr, setLastCheckInStatus, setLoginUserId, setAddedPin, setLoginUserName, token, activeLocation, activeCompany } = props
+  const { setCurrentTab, setIsTakeBreak, currentLocation, setLastACtivityStatusArr, setLastCheckInStatus, setLoginUserId, setAddedPin, setLoginUserName, token, activeLocation, activeCompany } = props
   const [pin, setpin] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [loader, setLoader] = useState(false)
@@ -32,19 +33,108 @@ const ClockPin = (props) => {
       setLoader(false)
       return false
     } else {
+      let dataObj = {
+        userId: result.data.user.uid,
+        locationId: activeLocation,
+        date: moment().format("YYYY/MM/DD")
+      }
+      console.log(dataObj)
+      console.log(moment(new Date, 'YYYY-MMM-DD'))
       let result1 = await getLoginPeopleData(token, dataObj);
-
       if (result1.status == 200) {
-        let v1 = result1.data.filter(data => data.userId == result.data.user.uid)
-        let cardLastIndex = (v1.length - 1)
-        console.log(v1[cardLastIndex])
-        setLastACtivityStatusArr(v1[cardLastIndex])
-        setLastCheckInStatus(v1[cardLastIndex].punchCard[0].punchType)
-        setLoader(false)
-        setCurrentTab("status");
-        setLoginUserId(result.data.user.uid)
-        setLoginUserName(result.data.user.email)
-        setAddedPin(pin)
+        console.log(result1)
+        if (result1.data.length !== 0) {
+
+          let v1 = result1.data.filter(data => data.punchCard.filter(data1 => data1.status === 'ACTIVE'))
+          console.log(v1)
+          let cardLastIndex = (v1.length - 1)
+          let LastActionArr
+          let lastActivityStatus
+          v1.map((val, index) => {
+            val.punchCard.map((valueCards, indexCards) => {
+              if (valueCards.status === "ACTIVE") {
+
+                if (valueCards.punchType === 'WORK' && valueCards.endTime === null) {
+                  console.log("in clock in status bjhbhjb+++++++++++++++++++")
+                  LastActionArr = val
+                  lastActivityStatus = valueCards.punchType
+                  setAddedPin(pin)
+                  setLoginUserId(result.data.user.uid)
+                  setLoginUserName(result.data.user.email)
+                  setCurrentTab("status");
+                } else if (valueCards.punchType === 'BREAKPAID' && valueCards.endTime === null) {
+                  console.log("in break in status bjhbhjb+++++++++++++++++++")
+                  LastActionArr = val
+                  lastActivityStatus = valueCards.punchType
+                  setAddedPin(pin)
+                  setLoginUserId(result.data.user.uid)
+                  setLoginUserName(result.data.user.email)
+                  setCurrentTab("status");
+                }
+                else if (valueCards.punchType === 'WORK' && valueCards.endTime != null && valueCards.endTime !== '') {
+                  console.log("in clock out status bjhbhjb+++++++++++++++++++")
+                  setLoader(false)
+                  setLoginUserId(result.data.user.uid)
+                  setLoginUserName(result.data.user.email)
+                  setCurrentTab("status");
+                  setAddedPin(pin)
+                } else if (valueCards.punchType === 'BREAKPAID' && valueCards.endTime != null && valueCards.endTime !== '') {
+                  console.log("in break out status bjhbhjb+++++++++++++++++++")
+                  // console.log(val)
+                  // setLastCheckInStatus(valueCards.punchType)
+
+                  setLoader(false)
+                  setLoginUserId(result.data.user.uid)
+                  setLoginUserName(result.data.user.email)
+                  // setCurrentTab("status");
+                  // setAddedPin(pin)
+                }
+              }
+            })
+          })
+          if (LastActionArr) {
+            setLastACtivityStatusArr(LastActionArr)
+
+            if (lastActivityStatus != '' && lastActivityStatus != undefined && lastActivityStatus === 'BREAKPAID') {
+
+              LastActionArr.punchCard.map((valuePunchCard, indexPunchCard) => {
+                if (valuePunchCard.punchType === 'BREAKPAID') {
+                  if (valuePunchCard.endTime != null && valuePunchCard.endTime != '') {
+                    setIsTakeBreak(false)
+                  } else {
+                    setIsTakeBreak(true)
+                  }
+                }
+              })
+
+              // setIsTakeBreak(true)
+            }
+
+          }
+          if (lastActivityStatus != '' && lastActivityStatus != undefined) {
+            setLastCheckInStatus(lastActivityStatus)
+          }
+
+
+
+          setLoader(false)
+
+          // console.log(v1[cardLastIndex])
+          // setLastACtivityStatusArr(v1[cardLastIndex])
+          // setLastCheckInStatus(v1[cardLastIndex].punchCard[0].punchType)
+          // setLoader(false)
+          // setCurrentTab("status");
+          // setLoginUserId(result.data.user.uid)
+          // setLoginUserName(result.data.user.email)
+          // setAddedPin(pin)
+        } else {
+          console.log("inhbhjhhg hg vhggh")
+          setLoader(false)
+          setLoginUserId(result.data.user.uid)
+          setLoginUserName(result.data.user.email)
+          setCurrentTab("status");
+          setAddedPin(pin)
+        }
       } else {
         setLoader(false)
         setLoginUserId(result.data.user.uid)

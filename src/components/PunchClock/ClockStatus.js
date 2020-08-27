@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Input, Icon, message } from "antd";
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
-import { uploadOns3, punchInUser, punchOutUser, addPunchCardImage } from './../../services/punchClock';
+import { uploadOns3, punchInUser, punchOutUser, addBraekOutPunchCard, addBraekPunchCard, addPunchCardImage } from './../../services/punchClock';
 import AppLoader from 'components/Common/AppLoader';
 import CircularProgress from "components/CircularProgress/index";
 
@@ -25,6 +25,7 @@ const ClockStatus = ({
   jobNote,
   loginUserName,
   lastCheckInStatus,
+  setLastCheckInStatus,
   loginUserId,
   token
 }) => {
@@ -36,21 +37,48 @@ const ClockStatus = ({
   const [currentTime, setCurrentTime] = useState()
   const [uploadedS3Data, setUploadedS3Data] = useState()
   const [loader, setLoader] = useState(false)
+  const [isOutFromAllState, setIsOutFromAllState] = useState(false)
   const [loaderSelectJob, setLoaderSelectJob] = useState(false)
+
+  const [innerTakeBreak, setInnerTakeBreak] = useState(false)
+
   let myRef = React.createRef();
 
   useEffect(() => {
     setCurrentTime(moment().format("h:mm a"))
-
+    console.log(lastCheckInStatus)
+    console.log(lastACtivityStatusArr)
+    console.log(isTakeBreak)
+    console.log(innerTakeBreak)
     if (lastCheckInStatus != '' && lastCheckInStatus == 'WORK') {
+      console.log("in this clockojhbjhbjbjhbhjbhjbj")
       setStatus('clockout')
+    } else if (lastCheckInStatus != '' && lastCheckInStatus == "BREAKPAID") {
+      if (lastACtivityStatusArr != '') {
+
+        // .map((val, index) => {
+        // lastACtivityStatusArr.punchCard.map((valuePunchCard, indexPunchCard) => {
+        //   if (valuePunchCard.punchType === 'BREAKPAID') {
+        //     if (valuePunchCard.endTime != null && valuePunchCard.endTime != '') {
+        //       setIsTakeBreak(false)
+        //     } else {
+        //       setIsTakeBreak(true)
+        //     }
+        //   }
+        // })
+        // })
+      }
+      // setChooseBreakModal(false)
+      setStatus('clockout')
+      // setIsTakeBreak(true)
     }
 
-  }, [])
+  }, [lastCheckInStatus])
 
   const clockInHandler = async () => {
-    console.log(loginUserId)
     setLoaderSelectJob(true)
+    // console.log(uploadedS3Data)
+    // return
     var image = new Image();
     // image.src =
     let dataObj = {
@@ -60,14 +88,14 @@ const ClockStatus = ({
         "punchType": "WORK",
         "jobInfoId": selectedOptionJob.jdid,
         "jobTitleValue": selectedOptionJob.jobTitle,
-        "notes": 'jobNote',
+        "notes": jobNote,
         "startTime": new Date(),
-        "endTime": new Date(),
+        "endTime": null,
         "changeReason": '',
         "punchCardImages": [
           {
-            "image": uploadedS3Data.file[0].punchCardImages[0].image,
-            "imageThumb": uploadedS3Data.file[0].punchCardImages[0].imageThumb,
+            "image": uploadedS3Data.file[0].Location,
+            "imageThumb": uploadedS3Data.file[0].Location,
             "imageType": 'START'
           }
         ]
@@ -88,37 +116,61 @@ const ClockStatus = ({
   };
 
   const selectOptionJob = (e, l) => {
-    console.log(l)
+    // console.log(l)
     e.preventDefault()
     setSelectedOptionJob(l)
-    console.log(l)
+    // console.log(l)
   }
 
-  const takeBreakHandler = (breakType) => {
-    console.log("breakType", breakType);
-    setChooseBreakModal(false);
+  useEffect(() => {
+    if (innerTakeBreak == true && isTakeBreak) {
+      console.log("called from first case")
+      document.getElementById('inner-circle').click()
+    }
+    else if (lastCheckInStatus != null && lastCheckInStatus != '' && lastCheckInStatus != undefined && lastCheckInStatus != 'WORK' && innerTakeBreak == false && isTakeBreak == false) {
+      console.log('innerTakeBreak', innerTakeBreak)
+      console.log('isTakeBreak', isTakeBreak)
+      document.getElementById('inner-circle').click()
+    }
+  }, [innerTakeBreak, isTakeBreak])
+
+  const takeBreakHandler = async (breakType) => {
+    setInnerTakeBreak(true)
     setIsTakeBreak(true);
+    setChooseBreakModal(false);
+    console.log("breakType", breakType);
   };
 
   const endBreakHandler = () => {
     setIsTakeBreak(false);
+    setInnerTakeBreak(false)
+    // document.getElementById('inner-circle').click()
   };
 
+  useEffect(() => {
+    if (isOutFromAllState == true) {
+      document.getElementById('inner-circle').click()
+    }
+  }, [isOutFromAllState])
+
   const clockOutHandler = async () => {
-    document.getElementById('inner-circle').click()
+    console.log('call from clockout handler')
+    setIsOutFromAllState(true)
   };
 
   const handleTakePhotoClockOut = async (dataUri) => {
+    console.log("in handle clock out innerTakeBreak", innerTakeBreak)
+    console.log("in handle clock out isTakeBreak", isTakeBreak)
     // Do stuff with the photo...
     setLoader(true)
-    console.log('takePhoto', dataUri);
+    // console.log('takePhoto', dataUri);
 
     // convert base64 to raw binary data held in a string
     let byteString = atob(dataUri.split(',')[1]);
 
     // separate out the mime component
     let mimeString = dataUri.split(',')[0].split(':')[1].split(';')[0]
-    console.log('mimeString', mimeString)
+    // console.log('mimeString', mimeString)
     // write the bytes of the string to an ArrayBuffer
     let ab = new ArrayBuffer(byteString.length);
     let ia = new Uint8Array(ab);
@@ -137,55 +189,309 @@ const ClockStatus = ({
       file: bb
     }
     let resultUpload = await uploadOns3(token, dataObj);
-    // console.log(result)
-    if (resultUpload.status === 201) {
+    console.log(innerTakeBreak)
+    if (innerTakeBreak) {
+      if (resultUpload.status === 201) {
+        message.success('your image is successfully capture!')
+        setLoader(false)
+        // setUploadedS3Data()
+        let punchCardId
+        let jobInfoId
+        let jobTitleValue
+        let startTime
+        lastACtivityStatusArr.punchCard.map((val, index) => {
+          // console.log(val)
+          if (val.punchType === "WORK") {
+            punchCardId = val.pcId
+            jobInfoId = val.jobInfoId
+            jobTitleValue = val.jobTitleValue
+            startTime = val.startTime
+          }
+        })
+        if (!innerTakeBreak) {
+          console.log("in break out section")
+          // console.log(lastACtivityStatusArr)
+          // return
+          // const clockOutHandler = asyncs() => {
+          let dataObj = {
+            "timeCardTcId": lastACtivityStatusArr.tcId,
+            "punchType": "BREAKPAID",
+            "jobInfoId": jobInfoId,
+            "jobTitleValue": jobTitleValue,
+            "notes": "Break out",
+            "startTime": startTime,
+            "endTime": new Date(),
+            "changeReason": "",
+            "punchCardImages": [
+              {
+                "tcId": lastACtivityStatusArr.tcId,
+                "punchCardPcId": punchCardId,
+                "image": resultUpload.data.file[0].Location,
+                "imageThumb": resultUpload.data.file[0].Location,
+                "imageType": "END"
+              }
+            ]
+          }
+          let result = await addBraekOutPunchCard(token, dataObj, punchCardId);
+          // console.log(result)
+          setLoaderSelectJob(false)
+          if (result.status == 200) {
+            message.success(`You are out of break ${loginUserName}!`)
+            setCurrentTab("pin")
+            setLastCheckInStatus('WORK')
+            setStatus("clockin");
+          } else {
+            setLoaderSelectJob(false)
+            message.error('something went wrong!')
+          }
+        } else {
+          console.log("in break take section")
+
+          // console.log(lastACtivityStatusArr)
+          // const clockOutHandler = asyncs() => {
+          let dataObj = {
+
+            "timeCardTcId": lastACtivityStatusArr.tcId,
+            "punchType": "BREAKPAID",
+            "jobInfoId": jobInfoId,
+            "jobTitleValue": jobTitleValue,
+            "notes": "it' break paid",
+            "startTime": new Date(),
+            "endTime": null,
+            "changeReason": "",
+            "punchCardImages": [
+              {
+                "image": resultUpload.data.file[0].Location,
+                "imageThumb": resultUpload.data.file[0].Location,
+                "imageType": "START"
+              }
+            ]
+          }
+          let result = await addBraekPunchCard(token, dataObj, punchCardId);
+          // console.log(result)
+          setLoaderSelectJob(false)
+          if (result.status == 201) {
+            message.success(`You get break from work ${loginUserName}!`)
+            setCurrentTab("pin")
+            setLastCheckInStatus(null)
+            setStatus("clockin");
+          } else {
+            setLoaderSelectJob(false)
+            message.error('something went wrong!')
+          }
+        }
+      } else {
+        message.error('something went wrong!')
+      }
+    } else if (lastCheckInStatus != '' && lastCheckInStatus == 'WORK') {
+      // console.log("in clock in status")
+      // console.log(result)
+      if (resultUpload.status === 201) {
+        message.success('your image is successfully capture!')
+        setLoader(false)
+        // setUploadedS3Data()
+        let punchCardId
+        lastACtivityStatusArr.punchCard.map((val, index) => {
+          if (val.punchType === "WORK") {
+            punchCardId = val.pcId
+          }
+        })
+
+        // const clockOutHandler = asyncs() => {
+        let dataObj = {
+          "userId": lastACtivityStatusArr.userId,
+          "locationId": lastACtivityStatusArr.locationId,
+          "tcId": lastACtivityStatusArr.tcId,
+          "punchCardPcId": punchCardId,
+          "image": resultUpload.data.file[0].Location,
+          "imageThumb": resultUpload.data.file[0].Location,
+          "imageType": "END"
+        }
+        // let result = await addPunchCardImage(token, dataObj);
+        // console.log(result)
+        setLoaderSelectJob(false)
+        // if (result.status == 201) {
+        let endTime = new Date()
+        let newArr = lastACtivityStatusArr.punchCard.map((val, index) => {
+          if (val.pcId == punchCardId) {
+            val.punchCardImages.push(dataObj)
+            val.endTime = endTime
+          }
+        })
+        // console.log('newArr', lastACtivityStatusArr)
+        // console.log('punchCardId', punchCardId)
+        let resultPunchOutUser = await punchOutUser(token, punchCardId, lastACtivityStatusArr)
+        if (resultPunchOutUser.status == 200) {
+          message.success(`You are logout now ${loginUserName}!`)
+          setCurrentTab("pin")
+          setLastCheckInStatus(null)
+          setStatus("clockin");
+        } else {
+          message.error('something went wrong!')
+        }
+        // } else {
+        //   setLoaderSelectJob(false)
+        //   message.error('something went wrong!')
+
+        // }
+
+        // setTimeout(function () {  }, 2000);
+      } else {
+        setLoader(false)
+
+        message.error('something went wrong!')
+      }
+    } else if (isOutFromAllState == false && innerTakeBreak == false && lastCheckInStatus === 'BREAKPAID') {
+
       message.success('your image is successfully capture!')
       setLoader(false)
       // setUploadedS3Data()
+      let punchCardId
+      let jobInfoId
+      let jobTitleValue
+      let startTime
+      lastACtivityStatusArr.punchCard.map((val, index) => {
+        // console.log(val)
+        if (val.punchType === "BREAKPAID") {
+          punchCardId = val.pcId
+          jobInfoId = val.jobInfoId
+          jobTitleValue = val.jobTitleValue
+          startTime = val.startTime
+        }
+      })
 
-      // const clockOutHandler = asyncs() => {
       let dataObj = {
         "userId": lastACtivityStatusArr.userId,
         "locationId": lastACtivityStatusArr.locationId,
         "tcId": lastACtivityStatusArr.tcId,
-        "punchCardPcId": lastACtivityStatusArr.punchCard[0].pcId,
+        "punchCardPcId": punchCardId,
         "image": resultUpload.data.file[0].Location,
         "imageThumb": resultUpload.data.file[0].Location,
         "imageType": "END"
       }
-      let result = await addPunchCardImage(token, dataObj);
-      if (result.status == 201) {
-        setLoaderSelectJob(false)
-        message.success(`You are logout now ${loginUserName}!`)
+      // let result = await addPunchCardImage(token, dataObj);
+      // console.log(result)
+      setLoaderSelectJob(false)
+      // if (result.status == 201) {
+      let endTime = new Date()
+      let newArr = lastACtivityStatusArr.punchCard.map((val, index) => {
+        if (val.pcId == punchCardId) {
+          val.punchCardImages.push(dataObj)
+          val.endTime = endTime
+        }
+      })
+
+      let sendDataObj
+      let neArr1 = lastACtivityStatusArr.punchCard.map((val, index) => {
+        if (val.punchType === 'BREAKPAID') {
+          sendDataObj = val
+        }
+      })
+
+      let result = await addBraekOutPunchCard(token, sendDataObj, punchCardId);
+      setLoaderSelectJob(false)
+      if (result.status == 200) {
+        message.success(`You are out of break ${loginUserName}!`)
         setCurrentTab("pin")
-        // setStatus("clockout");
-        // setNotesModal(false);
+        setLastCheckInStatus('WORK')
         setStatus("clockin");
       } else {
         setLoaderSelectJob(false)
         message.error('something went wrong!')
-
       }
-
-      // setTimeout(function () {  }, 2000);
-    } else {
+    } else if (isOutFromAllState == true && innerTakeBreak == false && lastCheckInStatus === 'BREAKPAID') {
       setLoader(false)
+      let punchCardIdBreakPaid
+      let jobInfoIdBreakPaid
+      let jobTitleValueBreakPaid
+      let startTime
+      lastACtivityStatusArr.punchCard.map((val, index) => {
+        if (val.punchType === "BREAKPAID") {
+          punchCardIdBreakPaid = val.pcId
+          jobInfoIdBreakPaid = val.jobInfoId
+          jobTitleValueBreakPaid = val.jobTitleValue
+          startTime = val.startTime
+        }
+      })
 
-      message.error('something went wrong!')
+      let dataObj = {
+        "userId": lastACtivityStatusArr.userId,
+        "locationId": lastACtivityStatusArr.locationId,
+        "tcId": lastACtivityStatusArr.tcId,
+        "punchCardPcId": punchCardIdBreakPaid,
+        "image": resultUpload.data.file[0].Location,
+        "imageThumb": resultUpload.data.file[0].Location,
+        "imageType": "END"
+      }
+      let endTime = new Date()
+      let newArr = lastACtivityStatusArr.punchCard.map((val, index) => {
+        if (val.pcId == punchCardIdBreakPaid) {
+          val.punchCardImages.push(dataObj)
+          val.endTime = endTime
+        }
+      })
+
+      let sendDataObj
+      let neArr1 = lastACtivityStatusArr.punchCard.map((val, index) => {
+        if (val.punchType === 'BREAKPAID') {
+          sendDataObj = val
+        }
+      })
+
+      let result = await addBraekOutPunchCard(token, sendDataObj, punchCardIdBreakPaid);
+      if (result.status == 200) {
+        let punchCardId
+        lastACtivityStatusArr.punchCard.map((val, index) => {
+          if (val.punchType === "WORK") {
+            punchCardId = val.pcId
+          }
+        })
+
+        let dataObj = {
+          "userId": lastACtivityStatusArr.userId,
+          "locationId": lastACtivityStatusArr.locationId,
+          "tcId": lastACtivityStatusArr.tcId,
+          "punchCardPcId": punchCardId,
+          "image": resultUpload.data.file[0].Location,
+          "imageThumb": resultUpload.data.file[0].Location,
+          "imageType": "END"
+        }
+        setLoaderSelectJob(false)
+        let endTime = new Date()
+        let newArr = lastACtivityStatusArr.punchCard.map((val, index) => {
+          if (val.pcId == punchCardId) {
+            val.punchCardImages.push(dataObj)
+            val.endTime = endTime
+          }
+        })
+        let resultPunchOutUser = await punchOutUser(token, punchCardId, lastACtivityStatusArr)
+        if (resultPunchOutUser.status == 200) {
+          message.success(`You are logout now ${loginUserName}!`)
+          setCurrentTab("pin")
+          setLastCheckInStatus(null)
+          setStatus("clockin");
+        } else {
+          message.error('something went wrong!')
+        }
+
+      } else {
+        setLoaderSelectJob(false)
+        message.error('something went wrong!')
+      }
     }
   }
 
   const handleTakePhoto = async (dataUri) => {
     // Do stuff with the photo...
     setLoader(true)
-    console.log('takePhoto', dataUri);
+    // console.log('takePhoto', dataUri);
 
     // convert base64 to raw binary data held in a string
     let byteString = atob(dataUri.split(',')[1]);
 
     // separate out the mime component
     let mimeString = dataUri.split(',')[0].split(':')[1].split(';')[0]
-    console.log('mimeString', mimeString)
+    // console.log('mimeString', mimeString)
     // write the bytes of the string to an ArrayBuffer
     let ab = new ArrayBuffer(byteString.length);
     let ia = new Uint8Array(ab);
@@ -204,7 +510,7 @@ const ClockStatus = ({
       file: bb
     }
     const result = await uploadOns3(token, dataObj);
-    console.log(result)
+    // console.log(result)
     if (result.status === 201) {
       message.success('your image is successfully capture!')
       setLoader(false)
@@ -229,7 +535,7 @@ const ClockStatus = ({
   }
 
   const addJobNote = (e) => {
-    console.log(e.target.value)
+    // console.log(e.target.value)
     setJobNote(e.target.value)
   }
 

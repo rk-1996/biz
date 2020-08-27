@@ -186,7 +186,7 @@ const PersonalDetails = (props) => {
                             message: "Please input birthdate!",
                           },
                         ],
-                      })(<DatePicker style={{ width: "100%" }} />)}
+                      })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
                     </FormItem>
                   </Col>
                   <Col span={8} xs={24} md={8}>
@@ -238,7 +238,7 @@ const PersonalDetails = (props) => {
                               message: "Please input start date!",
                             },
                           ],
-                        })(<DatePicker style={{ width: "100%" }} />)}
+                        })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
                       </FormItem>
                     </Col>
                     <Col span={8} xs={24} md={8}>

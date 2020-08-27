@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar, Badge, Col, DatePicker, Input, Menu, Row} from "antd";
+import { Avatar, Badge, Col, DatePicker, Input, Menu, Row } from "antd";
 import Moment from "moment";
 import CustomScrollbars from "util/CustomScrollbars";
 
@@ -7,17 +7,17 @@ import labels from "routes/inBuiltApps/Todo/data/labels";
 import users from "routes/inBuiltApps/Todo/data/users";
 import ConversationCell from "./ConversationCell";
 
-const {TextArea} = Input;
+const { TextArea } = Input;
 
 class ToDoDetail extends React.Component {
   handleLabelClick = event => {
-    this.setState({labelMenu: true, anchorEl: event.currentTarget});
+    this.setState({ labelMenu: true, anchorEl: event.currentTarget });
   };
   handleUserClick = event => {
-    this.setState({userMenu: true, anchorEl: event.currentTarget});
+    this.setState({ userMenu: true, anchorEl: event.currentTarget });
   };
   handleRequestClose = () => {
-    this.setState({userMenu: false, labelMenu: false});
+    this.setState({ userMenu: false, labelMenu: false });
   };
   _handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -46,11 +46,11 @@ class ToDoDetail extends React.Component {
   };
   handleDueDateChange = (date) => {
     this.setState({
-      todo: {...this.state.todo, dueDate: date}
+      todo: { ...this.state.todo, dueDate: date }
     });
   };
   handleChange = event => {
-    this.setState({[event.target.name]: event.target.value});
+    this.setState({ [event.target.name]: event.target.value });
   };
   optionMenu = () => {
     return (<Menu
@@ -59,7 +59,7 @@ class ToDoDetail extends React.Component {
       {users.map((user, index) =>
         <Menu.Item key={index} value={user.id}>
           <div className="gx-d-flex gx-user-name gx-align-items-center">
-            <Avatar src={user.thumb} alt={user.name}/><h4>{user.name}</h4>
+            <Avatar src={user.thumb} alt={user.name} /><h4>{user.name}</h4>
           </div>
         </Menu.Item>
       )}
@@ -79,8 +79,8 @@ class ToDoDetail extends React.Component {
 
   constructor(props) {
     super(props);
-    const {title, notes} = props.todo;
-    const {conversation} = props;
+    const { title, notes } = props.todo;
+    const { conversation } = props;
     this.state = {
       todo: props.todo,
       title,
@@ -118,8 +118,8 @@ class ToDoDetail extends React.Component {
   }
 
   render() {
-    const {onToDoUpdate, onDeleteToDo} = this.props;
-    const {todo, editNote, editTitle, title, notes, message, conversation} = this.state;
+    const { onToDoUpdate, onDeleteToDo } = this.props;
+    const { todo, editNote, editTitle, title, notes, message, conversation } = this.state;
     let user = null;
     if (todo.user > 0)
       user = users.find((user) => user.id === todo.user);
@@ -132,20 +132,21 @@ class ToDoDetail extends React.Component {
               <Col xs={24} sm={12} md={17} lg={12} xl={17}>
                 <div className="gx-flex-row">
                   <div className="gx-user-name gx-mr-md-4 gx-mr-2 gx-my-1"
-                       onClick={this.handleUserClick}>
+                    onClick={this.handleUserClick}>
 
                     {user === null ? <h4 className="gx-mb-0 gx-pointer">Assign User </h4> :
                       <div className="gx-flex-row gx-align-items-center gx-pointer">
-                        <Avatar className="gx-mr-2" src={user.thumb} alt={user.name}/>
+                        <Avatar className="gx-mr-2" src={user.thumb} alt={user.name} />
                         <h4 className="gx-mb-0">{user.name}</h4>
                       </div>}
                   </div>
                   <DatePicker className="gx-module-date gx-my-1"
-                              defaultValue={todo.dueDate !== null ? Moment(todo.dueDate, 'dddd, MMMM DD, YYYY h:mm a') : undefined}
-                              invalidLabel="Due Date"
-                              format="MMMM DD, YYYY"
-                              onChange={this.handleDueDateChange.bind(this)}
-                              animateYearScrolling={false}/>
+                    defaultValue={todo.dueDate !== null ? Moment(todo.dueDate, 'dddd, MMMM DD, YYYY h:mm a') : undefined}
+                    invalidLabel="Due Date"
+                    // format="MMMM DD, YYYY"
+                    format={'DD-MM-YYYY'}
+                    onChange={this.handleDueDateChange.bind(this)}
+                    animateYearScrolling={false} />
 
 
                 </div>
@@ -155,16 +156,16 @@ class ToDoDetail extends React.Component {
                 <div className="gx-flex-row gx-justify-content-between">
                   <i className="gx-icon-btn icon icon-trash" onClick={() => {
                     onDeleteToDo(todo);
-                  }}/>
+                  }} />
 
                   <span className="gx-d-block" onClick={() => {
                     todo.starred = !todo.starred;
                     onToDoUpdate(todo);
                   }}>
-                        {todo.starred ?
-                          <i className="gx-icon-btn icon icon-star"/> :
-                          <i className="gx-icon-btn icon icon-star-o"/>
-                        }
+                    {todo.starred ?
+                      <i className="gx-icon-btn icon icon-star" /> :
+                      <i className="gx-icon-btn icon icon-star-o" />
+                    }
 
                   </span>
 
@@ -172,14 +173,14 @@ class ToDoDetail extends React.Component {
                     todo.important = !todo.important;
                     onToDoUpdate(todo);
                   }}>
-                        {todo.important ?
-                          <i className="gx-icon-btn icon icon-important"/> :
-                          <i className="gx-icon-btn icon icon-important-o"/>
-                        }
+                    {todo.important ?
+                      <i className="gx-icon-btn icon icon-important" /> :
+                      <i className="gx-icon-btn icon icon-important-o" />
+                    }
 
                   </span>
                   <span className="gx-d-block" onClick={this.handleLabelClick}>
-                          <i className="gx-icon-btn icon icon-tag"/>
+                    <i className="gx-icon-btn icon icon-tag" />
                   </span>
 
 
@@ -193,7 +194,7 @@ class ToDoDetail extends React.Component {
             <div className="gx-mb-md-4 gx-mb-2">
               {labels.map((label, index) => {
                 return (todo.labels).includes(label.id) &&
-                  <Badge key={index} count={label.title} style={{backgroundColor: label.color}}/>
+                  <Badge key={index} count={label.title} style={{ backgroundColor: label.color }} />
               })}
             </div>
 
@@ -205,11 +206,11 @@ class ToDoDetail extends React.Component {
                 {todo.completed ?
                   <span
                     className="gx-border-2 gx-size-30 gx-rounded-circle gx-text-green gx-border-green gx-d-block gx-text-center gx-pointer">
-                                        <i className="icon icon-check"/></span>
+                    <i className="icon icon-check" /></span>
                   : <span
                     className="gx-border-2 gx-size-30 gx-rounded-circle gx-text-muted gx-border-grey gx-d-block gx-text-center gx-pointer">
-                                        <i className="icon icon-check"/>
-                                    </span>
+                    <i className="icon icon-check" />
+                  </span>
                 }
               </div>
               {editTitle ?
@@ -220,13 +221,13 @@ class ToDoDetail extends React.Component {
                       className="gx-task-title"
                       id="required"
                       placeholder="Title"
-                      onChange={(event) => this.setState({title: event.target.value})}
-                      defaultValue={title}/>
+                      onChange={(event) => this.setState({ title: event.target.value })}
+                      defaultValue={title} />
                   </div>
 
                   <span className="gx-d-block gx-size-40 gx-text-center gx-pointer"
-                        onClick={this.handleEditTitle}>
-                    <i className="gx-icon-btn icon icon-edit"/>
+                    onClick={this.handleEditTitle}>
+                    <i className="gx-icon-btn icon icon-edit" />
                   </span>
                 </div> :
                 <div className="gx-flex-row gx-align-items-center gx-justify-content-between gx-flex-1 gx-flex-nowrap">
@@ -234,8 +235,8 @@ class ToDoDetail extends React.Component {
                     {title}
                   </div>
                   <span className="gx-d-block gx-size-40 gx-text-center gx-pointer"
-                        onClick={this.handleEditTitle}>
-                    <i className="gx-icon-btn icon icon-edit"/>
+                    onClick={this.handleEditTitle}>
+                    <i className="gx-icon-btn icon icon-edit" />
                   </span>
 
                 </div>}
@@ -251,12 +252,12 @@ class ToDoDetail extends React.Component {
                     fullWidth
                     id="required"
                     placeholder="Note"
-                    onChange={(event) => this.setState({notes: event.target.value})}
-                    defaultValue={notes}/>
+                    onChange={(event) => this.setState({ notes: event.target.value })}
+                    defaultValue={notes} />
                 </div>
 
                 <span className="gx-d-block gx-size-40 gx-text-center gx-pointer" onClick={this.handleEditNote}>
-                    <i className="gx-icon-btn icon icon-edit"/>
+                  <i className="gx-icon-btn icon icon-edit" />
                 </span>
               </div> :
               <div className="gx-flex-row gx-align-items-center gx-justify-content-between gx-flex-1 gx-flex-nowrap">
@@ -264,8 +265,8 @@ class ToDoDetail extends React.Component {
                   {notes === '' ? 'Add note here' : notes}
                 </div>
                 <span className="gx-d-block gx-size-40 gx-text-center gx-pointer"
-                      onClick={this.handleEditNote}>
-                  <i className="gx-icon-btn icon icon-edit"/>
+                  onClick={this.handleEditNote}>
+                  <i className="gx-icon-btn icon icon-edit" />
                 </span>
 
               </div>}
@@ -274,7 +275,7 @@ class ToDoDetail extends React.Component {
             <h3 className="gx-mb-0 gx-mb-sm-1">Comments</h3>
           </div>
           {conversation.map((conversation, index) =>
-            <ConversationCell key={index} conversation={conversation}/>
+            <ConversationCell key={index} conversation={conversation} />
           )}
 
         </CustomScrollbars>
@@ -285,19 +286,19 @@ class ToDoDetail extends React.Component {
             <div className="gx-col">
               <div className="gx-form-group">
                 <TextArea className="gx-border-0 ant-input gx-chat-textarea"
-                          id="required"
-                          onKeyUp={this._handleKeyPress.bind(this)}
-                          onChange={this.updateMessageValue.bind(this)}
-                          value={message}
-                          rows={2}
-                          placeholder="Type and hit enter to send message"/>
+                  id="required"
+                  onKeyUp={this._handleKeyPress.bind(this)}
+                  onChange={this.updateMessageValue.bind(this)}
+                  value={message}
+                  rows={2}
+                  placeholder="Type and hit enter to send message" />
               </div>
             </div>
 
             <div className="gx-chat-sent"
-                 onClick={this.submitComment.bind(this)}
-                 aria-label="Send message">
-              <i className="gx-icon-btn icon icon-sent"/>
+              onClick={this.submitComment.bind(this)}
+              aria-label="Send message">
+              <i className="gx-icon-btn icon icon-sent" />
             </div>
           </div>
         </div>

@@ -14,9 +14,11 @@ const EmployeeEditModal = ({ visible, handleOk, handleCancel, activeCompany, ...
   useEffect(() => {
     if (employmentDetails) {
       setFieldsValue({
+        pin: employmentDetails.pin,
         manager: employmentDetails.manager,
         startDate: moment(employmentDetails.startDate),
-        employmentClass: employmentDetails.type
+        employmentClass: employmentDetails.type,
+        role: employmentDetails.role
       });
     }
   }, [employmentDetails, setFieldsValue]);
@@ -27,11 +29,13 @@ const EmployeeEditModal = ({ visible, handleOk, handleCancel, activeCompany, ...
       if (!err) {
         setLoader(true);
         const obj = {
+          pin: values.pin,
           manager: values.manager,
           startDate: moment(values.startDate),
           type: values.employmentClass,
           company: activeCompany.company,
-          location: activeCompany.location
+          location: activeCompany.location,
+          role: values.role
         }
         const result = await updateEmploymentDetail(token, { ...obj, id: params.id });
         setLoader(false);
@@ -103,6 +107,20 @@ const EmployeeEditModal = ({ visible, handleOk, handleCancel, activeCompany, ...
                   <Option value="Seasonal (0-6 Months per year)">
                     Seasonal (0-6 Months per year)
                 </Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={12} xs={24} md={12}>
+            <FormItem label="Role" className="display-block">
+              {getFieldDecorator("role", {
+                rules: [{ required: true, message: "Please select role!" }],
+              })(
+                <Select placeholder="Select Role">
+                  <Option value="owner">Owner</Option>
+                  <Option value="manager">Manager</Option>
+                  <Option value="lead">Lead</Option>
+                  <Option value="basic">Basic</Option>
                 </Select>
               )}
             </FormItem>

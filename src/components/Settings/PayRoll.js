@@ -56,7 +56,7 @@ const PayRoll = (props) => {
               },
             ],
           })(
-            <DatePicker style={{ width: "100%" }} />
+            <DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />
           )}
         </Form.Item>
         <div className="gx-fs-xl gx-pb-3 gx-pt-3">
@@ -73,7 +73,7 @@ const PayRoll = (props) => {
           </div>
           <div>
             <Form.Item>
-              {getFieldDecorator('hoursPerDay')(<InputNumber/>)}
+              {getFieldDecorator('hoursPerDay')(<InputNumber />)}
             </Form.Item>
           </div>
           <div className="ant-form-item gx-ml-2 gx-mr-3">
@@ -81,7 +81,7 @@ const PayRoll = (props) => {
           </div>
           <div>
             <Form.Item>
-              {getFieldDecorator('hourly')(<InputNumber/>)}
+              {getFieldDecorator('hourly')(<InputNumber />)}
             </Form.Item>
           </div>
           <div className="ant-form-item gx-ml-2">
@@ -110,7 +110,7 @@ const PayRoll = (props) => {
           </div>
           <div>
             <Form.Item>
-              {getFieldDecorator('hoursPerDay')(<InputNumber/>)}
+              {getFieldDecorator('hoursPerDay')(<InputNumber />)}
             </Form.Item>
           </div>
           <div className="ant-form-item gx-ml-2 gx-mr-3">
@@ -119,7 +119,7 @@ const PayRoll = (props) => {
           <div>
             <Form.Item>
               {getFieldDecorator('paidType')(
-                 <Select
+                <Select
                   showSearch
                   style={{ width: "100px" }}
                   placeholder="Select Type"
@@ -134,7 +134,7 @@ const PayRoll = (props) => {
           </div>
           <div>
             <Form.Item>
-              {getFieldDecorator('breakEvery')(<InputNumber/>)}
+              {getFieldDecorator('breakEvery')(<InputNumber />)}
             </Form.Item>
           </div>
           <div className="ant-form-item gx-ml-3 gx-mr-3">
@@ -143,7 +143,7 @@ const PayRoll = (props) => {
           <div>
             <Form.Item>
               {getFieldDecorator('optional')(
-                 <Select
+                <Select
                   showSearch
                   style={{ width: "100px" }}
                   placeholder="Select Type"

@@ -54,11 +54,11 @@ const Employment = (props) => {
               >
                 {
                   activeCompanyDetails && activeCompanyDetails.locations && activeCompanyDetails.locations.length ?
-                  activeCompanyDetails.locations.map((c,i) => {
-                    return (
-                      <Option value={c.lid}>{c.name}</Option>
-                    )
-                  }) : ""
+                    activeCompanyDetails.locations.map((c, i) => {
+                      return (
+                        <Option value={c.lid}>{c.name}</Option>
+                      )
+                    }) : ""
                 }
               </Select>
             )}
@@ -68,7 +68,7 @@ const Employment = (props) => {
           <FormItem label="Start Date" className="display-block">
             {getFieldDecorator("startDate", {
               rules: [{ required: true, message: "Please input start date!" }],
-            })(<DatePicker style={{ width: "100%" }} />)}
+            })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
           </FormItem>
         </Col>
         <Col span={8} xs={24} md={8}>
@@ -135,7 +135,7 @@ const Employment = (props) => {
                 setFieldsValue({
                   jobTitle: e
                 })
-              }}/>
+              }} />
             )}
           </FormItem>
         </Col>
@@ -148,7 +148,7 @@ const Employment = (props) => {
                 setFieldsValue({
                   department: e
                 })
-              }}/>
+              }} />
             )}
           </FormItem>
         </Col>

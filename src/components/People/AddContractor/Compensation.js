@@ -33,11 +33,11 @@ const Employment = (props) => {
               <Select placeholder="Select Location">
                 {
                   activeCompanyDetails && activeCompanyDetails.locations && activeCompanyDetails.locations.length ?
-                  activeCompanyDetails.locations.map((c,i) => {
-                    return (
-                      <Option value={c.lid}>{c.name}</Option>
-                    )
-                  }) : ""
+                    activeCompanyDetails.locations.map((c, i) => {
+                      return (
+                        <Option value={c.lid}>{c.name}</Option>
+                      )
+                    }) : ""
                 }
               </Select>
             )}
@@ -47,7 +47,7 @@ const Employment = (props) => {
           <FormItem label="Start Date" className="display-block">
             {getFieldDecorator("startDate", {
               rules: [{ required: true, message: "Please input start date!" }],
-            })(<DatePicker style={{ width: "100%" }} />)}
+            })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
           </FormItem>
         </Col>
         <Col span={8} xs={24} md={8}>
@@ -55,7 +55,7 @@ const Employment = (props) => {
             {getFieldDecorator("jobTitle", {
               rules: [{ required: true, message: "Please select job title!" }],
             })(
-              <SelectJob/>
+              <SelectJob />
             )}
           </FormItem>
         </Col>
@@ -64,7 +64,7 @@ const Employment = (props) => {
             {getFieldDecorator("department", {
               rules: [{ required: true, message: "Please select department!" }],
             })(
-              <SelectDepartment/>
+              <SelectDepartment />
             )}
           </FormItem>
         </Col>
@@ -97,25 +97,25 @@ const Employment = (props) => {
               </Col>
             </Row>
           ) : (
-            <Row>
-              <Col span={8} xs={24} md={8}>
-                <FormItem label="Hourly Rate" className="display-block">
-                  {getFieldDecorator("hourlyAmount", {
-                    rules: [
-                      { required: true, message: "Please input amount!" },
-                    ],
-                  })(<Input style={{ width: "100%" }} prefix="$" />)}
-                </FormItem>
-              </Col>
-              <Col span={8} xs={24} md={8}>
-                <FormItem label="Default Hours" className="display-block">
-                  {getFieldDecorator("defaultHours")(
-                    <Input type="text" placeholder="Default Hours" />
-                  )}
-                </FormItem>
-              </Col>
-            </Row>
-          )}
+              <Row>
+                <Col span={8} xs={24} md={8}>
+                  <FormItem label="Hourly Rate" className="display-block">
+                    {getFieldDecorator("hourlyAmount", {
+                      rules: [
+                        { required: true, message: "Please input amount!" },
+                      ],
+                    })(<Input style={{ width: "100%" }} prefix="$" />)}
+                  </FormItem>
+                </Col>
+                <Col span={8} xs={24} md={8}>
+                  <FormItem label="Default Hours" className="display-block">
+                    {getFieldDecorator("defaultHours")(
+                      <Input type="text" placeholder="Default Hours" />
+                    )}
+                  </FormItem>
+                </Col>
+              </Row>
+            )}
         </Col>
         {/* <Col span={24}>
           <div className="gx-fs-xl gx-pt-3 gx-pb-3">Time Off</div>

@@ -311,3 +311,30 @@ export const getValidPin = (token, params) => {
     .then(e => e)
     .catch(e => e);
 };
+
+//update notes in people
+export const updateNotesEmployee = (token, params, data) => {
+  setHeadersWithAccessToken(token);
+  return axios
+    .put(`${API_BASE}/employee/update-employee/${params.user}/${params.company}`, data)
+    .then(e => e)
+    .catch(e => e);
+}
+
+//update company status for employee
+export const editCompanyStatusForEmployee = (token, params, data) => {
+  setHeadersWithAccessToken(token);
+  return axios
+    .put(`${API_BASE}/employee/compensation/${params.company}/${params.location}/${params.empid}`, data)
+    .then(e => e)
+    .catch(e => e);
+}
+
+//update notes in contractor
+export const updateNotesContractor = (token, params, data) => {
+  setHeadersWithAccessToken(token);
+  return axios
+    .put(`${API_BASE}/employee/update-employee/${params.user}/${params.company}`, data)
+    .then(e => e)
+    .catch(e => e);
+}

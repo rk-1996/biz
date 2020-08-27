@@ -27,7 +27,7 @@ const ViewContrator = (props) => {
       }
       setLoading(true);
       const result = await getPeopleDetails(authUser.tokens.accessToken, obj, activeCompany.company, activeCompany.location);
-      if(result.status === 200) {
+      if (result.status === 200) {
         setContractorData(result.data)
         setLoading(false);
       }
@@ -42,7 +42,7 @@ const ViewContrator = (props) => {
   const updateSavedObj = (data) => {
     setContractorData(data);
   }
-  
+
   return (
     <div>
       <div className="gx-mb-30">
@@ -64,7 +64,7 @@ const ViewContrator = (props) => {
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      {loading && <AppLoader/>}
+      {loading && <AppLoader />}
       {
         contractorData &&
         <Card className="gx-card">
@@ -84,10 +84,11 @@ const ViewContrator = (props) => {
               />
             </TabPane>
             <TabPane tab="Documents" key={3}>
-              <Document/>
+              <Document />
             </TabPane>
             <TabPane tab="Notes" key={4}>
-              <Notes/>
+              {/* <Notes/> */}
+              <Notes actionType='contractor' token={authUser.tokens} Data={contractorData} activeCompany={activeCompany} />
             </TabPane>
           </Tabs>
         </Card>
@@ -97,7 +98,7 @@ const ViewContrator = (props) => {
 };
 
 const mapStateToProps = ({ auth, ...state }) => {
-  const {authUser} = auth;
+  const { authUser } = auth;
   return {
     authUser,
     jobs: state.common.jobs,

@@ -109,7 +109,7 @@ const CompensationEditModal = ({
                 rules: [
                   { required: true, message: "Please input start date!" },
                 ],
-              })(<DatePicker style={{ width: "100%" }} />)}
+              })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
             </FormItem>
           </Col>
           <Col span={12} xs={24} md={12}>
@@ -117,7 +117,7 @@ const CompensationEditModal = ({
               {getFieldDecorator("jobTitle", {
                 rules: [{ required: true, message: "Please input job title!" }],
               })(
-                <SelectJob selected={compensation.jobTitle}/>
+                <SelectJob selected={compensation.jobTitle} />
               )}
             </FormItem>
           </Col>
@@ -128,7 +128,7 @@ const CompensationEditModal = ({
                   { required: true, message: "Please select department!" },
                 ],
               })(
-                <SelectDepartment selected={compensation.department}/>
+                <SelectDepartment selected={compensation.department} />
               )}
             </FormItem>
           </Col>
@@ -179,25 +179,25 @@ const CompensationEditModal = ({
                 </Col>
               </Row>
             ) : (
-              <Row>
-                <Col span={12} xs={24} md={12}>
-                  <FormItem label="Hourly Rate" className="display-block">
-                    {getFieldDecorator("hourlyAmount", {
-                      rules: [
-                        { required: true, message: "Please input amount!" },
-                      ],
-                    })(<Input style={{ width: "100%" }} prefix="$" />)}
-                  </FormItem>
-                </Col>
-                <Col span={12} xs={24} md={12}>
-                  <FormItem label="Default Hours" className="display-block">
-                    {getFieldDecorator("defaultHours")(
-                      <Input type="text" placeholder="Default Hours" />
-                    )}
-                  </FormItem>
-                </Col>
-              </Row>
-            )}
+                <Row>
+                  <Col span={12} xs={24} md={12}>
+                    <FormItem label="Hourly Rate" className="display-block">
+                      {getFieldDecorator("hourlyAmount", {
+                        rules: [
+                          { required: true, message: "Please input amount!" },
+                        ],
+                      })(<Input style={{ width: "100%" }} prefix="$" />)}
+                    </FormItem>
+                  </Col>
+                  <Col span={12} xs={24} md={12}>
+                    <FormItem label="Default Hours" className="display-block">
+                      {getFieldDecorator("defaultHours")(
+                        <Input type="text" placeholder="Default Hours" />
+                      )}
+                    </FormItem>
+                  </Col>
+                </Row>
+              )}
           </Col>
           <Col span={24} xs={24} md={24}>
             <FormItem label="Reason for Change" className="display-block">

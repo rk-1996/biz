@@ -82,13 +82,13 @@ const ListPeople = (props) => {
       locationId: location,
       type: people.type
     }
-    if(people.type === 'employee') {
+    if (people.type === 'employee') {
       obj['id'] = people.eid
     } else {
-      obj['id'] =people.cnid
+      obj['id'] = people.cnid
     }
     const result = await dissmissedPeople(token, obj);
-    if(result.status === 200) {
+    if (result.status === 200) {
       const obj = {
         company: activeCompany,
         location: activeLocation,
@@ -114,16 +114,16 @@ const ListPeople = (props) => {
             >
               {
                 record.type === "contractor" ?
-                <div>
-                  {
-                    record.businessName && record.businessName !== '' ?
-                    <span>{`${record.hasOwnProperty('businessName') ? record.businessName : ""}`}</span> :
-                    <span>{`${record.hasOwnProperty('firstName') ? record.firstName : ""} ${record.hasOwnProperty('lastName') ? record.lastName : ""}`}</span>
-                  }
-                </div> :
-                <div>
-                  {`${record.hasOwnProperty('firstName') ? record.firstName : ""} ${record.hasOwnProperty('lastName') ? record.lastName : ""}`}
-                </div>
+                  <div>
+                    {
+                      record.businessName && record.businessName !== '' ?
+                        <span>{`${record.hasOwnProperty('businessName') ? record.businessName : ""}`}</span> :
+                        <span>{`${record.hasOwnProperty('firstName') ? record.firstName : ""} ${record.hasOwnProperty('lastName') ? record.lastName : ""}`}</span>
+                    }
+                  </div> :
+                  <div>
+                    {`${record.hasOwnProperty('firstName') ? record.firstName : ""} ${record.hasOwnProperty('lastName') ? record.lastName : ""}`}
+                  </div>
               }
             </div>
           </div>
@@ -150,6 +150,11 @@ const ListPeople = (props) => {
       key: "type",
     },
     {
+      title: "Location",
+      dataIndex: "type",
+      key: "location",
+    },
+    {
       title: "Status",
       dataIndex: "active",
       key: "active",
@@ -171,20 +176,20 @@ const ListPeople = (props) => {
           </Tooltip>
           {
             status !== 4 ?
-            <Tooltip placement="top" title="Dismiss People">
-              <Popconfirm placement="topLeft" title={'Are you sure to dismiss ?'} onConfirm={() => dissmissPeopleHandler(record)} okText="Yes" cancelText="No">
-                <Button size="small" className="gx-mb-0" type="danger">
-                  <Icon type="delete" className="cursor-pointer" />
-                </Button>
-              </Popconfirm>
-            </Tooltip> :
-            <Tooltip placement="top" title="Active People">
-              <Popconfirm placement="topLeft" title={'Are you sure to Active ?'} onConfirm={() => dissmissPeopleHandler(record)} okText="Yes" cancelText="No">
-                <Button size="small" className="gx-mb-0" type="primary">
-                  <Icon type="rollback" className="cursor-pointer" />
-                </Button>
-              </Popconfirm>
-            </Tooltip>
+              <Tooltip placement="top" title="Dismiss People">
+                <Popconfirm placement="topLeft" title={'Are you sure to dismiss ?'} onConfirm={() => dissmissPeopleHandler(record)} okText="Yes" cancelText="No">
+                  <Button size="small" className="gx-mb-0" type="danger">
+                    <Icon type="delete" className="cursor-pointer" />
+                  </Button>
+                </Popconfirm>
+              </Tooltip> :
+              <Tooltip placement="top" title="Active People">
+                <Popconfirm placement="topLeft" title={'Are you sure to Active ?'} onConfirm={() => dissmissPeopleHandler(record)} okText="Yes" cancelText="No">
+                  <Button size="small" className="gx-mb-0" type="primary">
+                    <Icon type="rollback" className="cursor-pointer" />
+                  </Button>
+                </Popconfirm>
+              </Tooltip>
           }
         </span>
       ),
@@ -204,14 +209,14 @@ const ListPeople = (props) => {
       return getPeopleWithKey.filter(
         (a) =>
           a.type === "contractor" &&
-         ((a.firstName && a.firstName.toLowerCase().includes(searchText.toLowerCase())) ||
+          ((a.firstName && a.firstName.toLowerCase().includes(searchText.toLowerCase())) ||
             a.email.toLowerCase().includes(searchText.toLowerCase()) ||
             (a.lastName && a.lastName.toLowerCase().includes(searchText.toLowerCase())))
       );
     } else if (status === 4) {
       return getPeopleWithKey.filter(
         (a) =>
-         ((a.firstName && a.firstName.toLowerCase().includes(searchText.toLowerCase())) ||
+          ((a.firstName && a.firstName.toLowerCase().includes(searchText.toLowerCase())) ||
             a.email.toLowerCase().includes(searchText.toLowerCase()) ||
             (a.lastName && a.lastName.toLowerCase().includes(searchText.toLowerCase())))
       );
@@ -219,15 +224,15 @@ const ListPeople = (props) => {
     return getPeopleWithKey.filter(
       (a) =>
         ((a.firstName && a.firstName.toLowerCase().includes(searchText.toLowerCase())) ||
-        a.email.toLowerCase().includes(searchText.toLowerCase()) ||
-        (a.lastName && a.lastName.toLowerCase().includes(searchText.toLowerCase())))
+          a.email.toLowerCase().includes(searchText.toLowerCase()) ||
+          (a.lastName && a.lastName.toLowerCase().includes(searchText.toLowerCase())))
     );
   }, [status, searchText, getPeopleWithKey]);
 
   const onChangePeopleTab = (key) => {
     const getCompany = companies.find(a => a.cid === activeCompany);
     let locationId = activeLocation ? activeLocation : getCompany.locations[0].lid
-    if(Number(key) === 4) {
+    if (Number(key) === 4) {
       const obj = {
         company: activeCompany,
         dissmissed: true,

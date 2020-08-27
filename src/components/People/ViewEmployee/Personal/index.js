@@ -11,7 +11,7 @@ const Personal = ({ employeeData, updateSavedObj, authUser, match }) => {
   const [isEditEmergency, setIsEditEmergency] = useState(false);
   const { params } = match;
   const { address } = employeeData;
-
+  console.log(employeeData)
   return (
     <div>
       <div className="gx-fs-lg gx-pb-2">Personal</div>
@@ -48,7 +48,7 @@ const Personal = ({ employeeData, updateSavedObj, authUser, match }) => {
           <div className="flex-1 gx-text-grey">
             {`${address.street1} ${address.street2 ? address.street2 : ""}, ${
               address.city
-            }, ${address.state}, ${address.zip}`}
+              }, ${address.state}, ${address.zip}`}
           </div>
         </div>
         <div className="flex-x">
@@ -64,52 +64,52 @@ const Personal = ({ employeeData, updateSavedObj, authUser, match }) => {
             Social Security Number
           </div>
           <div className="flex-1 gx-text-grey">
-            { employeeData.ssn }
+            {employeeData.ssn}
           </div>
         </div>
       </div>
       <div className="gx-pt-4">
-      <div className="gx-fs-lg gx-pb-2">Emergency Contact Info</div>
+        <div className="gx-fs-lg gx-pb-2">Emergency Contact Info</div>
         <div className="employee-detail-block">
           <div className="edit-icon" onClick={() => setIsEditEmergency(true)}>
             <Icon type="edit" /> Edit
           </div>
           {
             employeeData && employeeData.emergencyInfo ?
-            <>
-              <div className="flex-x">
-                <div className="flex-1 text-right gx-pr-5 gx-font-weight-medium">
-                  Full Name
+              <>
+                <div className="flex-x">
+                  <div className="flex-1 text-right gx-pr-5 gx-font-weight-medium">
+                    Full Name
                 </div>
-                <div className="flex-1 gx-text-grey">
-                  {employeeData.emergencyInfo.fullName}
+                  <div className="flex-1 gx-text-grey">
+                    {employeeData.emergencyInfo.fullName}
+                  </div>
                 </div>
-              </div>
-              <div className="flex-x">
-                <div className="flex-1 text-right gx-pr-5 gx-font-weight-medium">
-                  Relationship
+                <div className="flex-x">
+                  <div className="flex-1 text-right gx-pr-5 gx-font-weight-medium">
+                    Relationship
                 </div>
-                <div className="flex-1 gx-text-grey">
-                  {employeeData.emergencyInfo.relation}
+                  <div className="flex-1 gx-text-grey">
+                    {employeeData.emergencyInfo.relation}
+                  </div>
                 </div>
-              </div>
-              <div className="flex-x">
-                <div className="flex-1 text-right gx-pr-5 gx-font-weight-medium">
-                  Phone Number
+                <div className="flex-x">
+                  <div className="flex-1 text-right gx-pr-5 gx-font-weight-medium">
+                    Phone Number
                 </div>
-                <div className="flex-1 gx-text-grey">
-                  {mobileFormat(String(employeeData.emergencyInfo.phone))}
+                  <div className="flex-1 gx-text-grey">
+                    {mobileFormat(String(employeeData.emergencyInfo.phone))}
+                  </div>
                 </div>
-              </div>
-              <div className="flex-x">
-                <div className="flex-1 text-right gx-pr-5 gx-font-weight-medium">
-                  E-mail
+                <div className="flex-x">
+                  <div className="flex-1 text-right gx-pr-5 gx-font-weight-medium">
+                    E-mail
                 </div>
-                <div className="flex-1 gx-text-grey">
-                  {employeeData.emergencyInfo.email}
+                  <div className="flex-1 gx-text-grey">
+                    {employeeData.emergencyInfo.email}
+                  </div>
                 </div>
-              </div>
-            </> : <div>No Emergency Details Added</div>
+              </> : <div>No Emergency Details Added</div>
           }
         </div>
       </div>

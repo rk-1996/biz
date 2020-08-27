@@ -46,7 +46,7 @@ const PunchClock = (props) => {
     <div>
       {currentTab === "pin" ? (
         <ClockPin activeCompany={activeCompany}
-          activeLocation={activeLocation} setLastACtivityStatusArr={setLastACtivityStatusArr} setLastCheckInStatus={setLastCheckInStatus} token={token} setLoginUserId={setLoginUserId} setLoginUserName={setLoginUserName} currentLocation={selectedOption} setAddedPin={setAddedPin} setCurrentTab={setCurrentTab} />
+          activeLocation={activeLocation} setIsTakeBreak={setIsTakeBreak} isTakeBreak={isTakeBreak} setLastACtivityStatusArr={setLastACtivityStatusArr} setLastCheckInStatus={setLastCheckInStatus} token={token} setLoginUserId={setLoginUserId} setLoginUserName={setLoginUserName} currentLocation={selectedOption} setAddedPin={setAddedPin} setCurrentTab={setCurrentTab} />
       ) : (
           currentTab === "status" && addedPin != '' ? (
             <ClockStatus
@@ -65,6 +65,7 @@ const PunchClock = (props) => {
               addedPin={addedPin}
               jobData={jobData}
               lastCheckInStatus={lastCheckInStatus}
+              setLastCheckInStatus={setLastCheckInStatus}
               selectedOptionJob={selectedOptionJob}
               setSelectedOptionJob={setSelectedOptionJob}
               setCurrentTab={setCurrentTab}

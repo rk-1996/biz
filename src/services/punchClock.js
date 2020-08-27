@@ -28,10 +28,10 @@ export const getPeople = (token, params) => {
 };
 
 //this function is for used login people data
-export const getLoginPeopleData = (token, userId = '') => {
+export const getLoginPeopleData = (token, dataObj) => {
     setHeadersWithAccessToken(token);
     return axios
-        .get(`${API_BASE}/punch-clock/`)
+        .get(`${API_BASE}/punch-clock?userId=${dataObj.userId}&locationId=${dataObj.locationId}&date=${dataObj.date}`)
         .then(e => e)
         .catch(e => e);
 }
@@ -46,21 +46,36 @@ export const punchInUser = (token, params) => {
 };
 
 //for punching out user
-export const punchOutUser = (token, params) => {
+export const punchOutUser = (token, punchCardId, params) => {
     setHeadersWithAccessToken(token);
-    let punchCardId = params.pcId
-    delete (params.pcId)
     return axios
         .put(`${API_BASE}/punch-clock/${punchCardId}`, params)
         .then(e => e)
         .catch(e => e);
 };
 
+export const addBraekPunchCard = (token, params) => {
+    setHeadersWithAccessToken(token);
+    return axios
+        .post(`${API_BASE}/punch-clock/punchCard`, params)
+        .then(e => e)
+        .catch(e => e);
+}
+
+//add break out punch card
+export const addBraekOutPunchCard = (token, params, id) => {
+    setHeadersWithAccessToken(token);
+    return axios
+        .put(`${API_BASE}/punch-clock/punchCard/${id}`, params)
+        .then(e => e)
+        .catch(e => e);
+}
+
 //for add one punch card image in current object
 export const addPunchCardImage = (token, params) => {
     setHeadersWithAccessToken(token);
     return axios
-        .put(`${API_BASE}/punch-clock/punchCardImage`, params)
+        .post(`${API_BASE}/punch-clock/punchCardImage`, params)
         .then(e => e)
         .catch(e => e);
 }

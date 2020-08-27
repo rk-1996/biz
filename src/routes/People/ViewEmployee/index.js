@@ -27,7 +27,7 @@ const ViewEmployee = (props) => {
       }
       setLoading(true);
       const result = await getPeopleDetails(authUser.tokens.accessToken, obj, activeCompany.company, activeCompany.location);
-      if(result.status === 200) {
+      if (result.status === 200) {
         setEmployeeData(result.data)
         setLoading(false);
       }
@@ -65,7 +65,7 @@ const ViewEmployee = (props) => {
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      {loading && <AppLoader/>}
+      {loading && <AppLoader />}
       {
         employeeData &&
         <Card className="gx-card">
@@ -91,20 +91,20 @@ const ViewEmployee = (props) => {
               />
             </TabPane>
             <TabPane tab="Documents" key={4}>
-              <Document/>
+              <Document />
             </TabPane>
             <TabPane tab="Notes" key={5}>
-              <Notes/>
+              <Notes actionType='employee' token={authUser.tokens} Data={employeeData} activeCompany={activeCompany} />
             </TabPane>
           </Tabs>
-      </Card>
-    }
+        </Card>
+      }
     </div>
   );
 };
 
-const mapStateToProps = ({auth, ...state}) => {
-  const {authUser} = auth;
+const mapStateToProps = ({ auth, ...state }) => {
+  const { authUser } = auth;
   return {
     authUser,
     jobs: state.common.jobs,

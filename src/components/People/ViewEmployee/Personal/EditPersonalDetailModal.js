@@ -21,11 +21,12 @@ const EditPersonalDetailModal = ({
 
   useEffect(() => {
     if (employeeData) {
+      console.log('employeeData', employeeData)
       setFieldsValue({
         firstName: employeeData.firstName,
         lastName: employeeData.lastName,
         middleName: employeeData.middleName,
-        dob: moment(employeeData.startDate),
+        dob: moment(employeeData.dob),
         email: employeeData.email,
         ssn: employeeData.ssn,
         phone: employeeData.phone,
@@ -40,7 +41,7 @@ const EditPersonalDetailModal = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.form.validateFields(async(err, values) => {
+    props.form.validateFields(async (err, values) => {
       if (!err) {
         setLoader(true);
         console.log("values", values);
@@ -58,9 +59,9 @@ const EditPersonalDetailModal = ({
             state: values.state
           }
         }
-        const result = await updatePersonalDetail(token, {...obj, ...params, actionType: "employee"}, company, location);
+        const result = await updatePersonalDetail(token, { ...obj, ...params, actionType: "employee" }, company, location);
         setLoader(false);
-        if(result.status === 200) {
+        if (result.status === 200) {
           updateSavedObj(result.data);
           handleCancel();
         }
@@ -102,10 +103,10 @@ const EditPersonalDetailModal = ({
             </FormItem>
           </Col>
           <Col span={12} xs={24} md={12}>
-            <FormItem label="Date of birth" className="display-block">
+            <FormItem label="Date ofs birth" className="display-block">
               {getFieldDecorator("dob", {
                 rules: [{ required: true, message: "Please input birthdate!" }],
-              })(<DatePicker style={{ width: "100%" }} />)}
+              })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
             </FormItem>
           </Col>
           <Col span={12} xs={24} md={12}>
