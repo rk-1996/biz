@@ -40,6 +40,7 @@ import {
 
 function* getCompany({ payload }) {
   try {
+    console.log("called api hbhjbhjbhj")
     const authUser = yield select((state) => state.auth.authUser);
     const token = authUser.tokens.accessToken;
     const permission = authUser.user.companies[0].permissions;
@@ -62,7 +63,7 @@ function* getCompany({ payload }) {
       }, {});
       const finalData = Object.values(data).map(x => ({ name: x[0].companyName, cid: x[0].cid, locations: data[x[0].cid].map(y => ({ name: y.locationName, lid: y.lid })) }));
       yield put(commonGetCompanySuccess(finalData));
-      
+
       if (finalData && finalData.length) {
         yield put(setActiveCompany({
           company: finalData[0].cid,

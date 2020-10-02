@@ -25,7 +25,7 @@ const PersonalDetails = (props) => {
   useEffect(() => {
     if (formValues) {
       setFieldsValue({
-        dob: moment(formValues.dob, "DD-MM-YYYY"),
+        dob: moment(formValues.dob, "yyyy-mm-dd"),
         firstName: formValues.firstName,
         lastName: formValues.lastName,
         middleName: formValues.middleName,
@@ -232,8 +232,8 @@ const PersonalDetails = (props) => {
                       <FormItem label="Zip" className="display-block">
                         {getFieldDecorator("zip", {
                           rules: [
-                            { min: 5, message: "Min length 5 is required!" },
-                            { max: 5, message: "Max length 5 is required!" },
+                            // { min: 5, message: "Min length 5 is required!" },
+                            // { max: 5, message: "Max length 5 is required!" },
                             {
                               required: true,
                               message: "Please input your zip!",

@@ -282,7 +282,7 @@ const ListPeople = (props) => {
         </Breadcrumb>
       </div>
       <Card className="gx-card" title="People">
-        <Tabs onChange={onChangePeopleTab}>
+        <Tabs className='tab-modal-timesheet' onChange={onChangePeopleTab}>
           <TabPane tab="ALL" key={1}></TabPane>
           <TabPane tab="EMPLOYEES" key={2}></TabPane>
           <TabPane tab="CONTRACTORS" key={3}></TabPane>
@@ -322,6 +322,7 @@ const ListPeople = (props) => {
           } */}
           <div>
             <Button
+              className='btn-theme-color-grey'
               type="primary"
               style={{ minWidth: "100px" }}
               onClick={() => setOpenModal(true)}

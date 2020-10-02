@@ -13,17 +13,21 @@ import {
 import SelectJob from 'components/Common/SelectJob';
 import SelectDepartment from 'components/Common/SelectDepartment';
 import SelectLocation from 'components/Common/SelectLocation';
+import SelectPeopleManager from 'components/Common/SelectPeopleManager'
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
 const Employment = (props) => {
-  const { setFormTab, onCompleteDetail, jobs, departments, activeCompanyDetails } = props;
+  const { setFormTab, onCompleteDetail, jobs, departments, people, activeCompanyDetails } = props;
   const { getFieldDecorator, setFieldsValue } = props.form;
   const handleSubmit = (e) => {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
+        if (values.manager === undefined) {
+          values.manager = 'NA'
+        }
         console.log("values", values);
         onCompleteDetail(values, 'step2');
         setFormTab("3");
@@ -75,13 +79,18 @@ const Employment = (props) => {
           <FormItem label="Manager" className="display-block">
             {getFieldDecorator("manager", {
               rules: [
-                { required: true, message: "Please input manager name!" },
+                // { required: true, message: "Please input manager name!" },
               ],
             })(
-              <Select placeholder="Select Manager">
-                <Option value="A">A</Option>
-                <Option value="B">B</Option>
-              </Select>
+              <SelectPeopleManager people={people} onChange={(e) => {
+                setFieldsValue({
+                  manager: e
+                })
+              }} />
+              // <Select placeholder="Select Manager">
+              //   <Option value="A">A</Option>
+              //   <Option value="B">B</Option>
+              // </Select>
             )}
           </FormItem>
         </Col>

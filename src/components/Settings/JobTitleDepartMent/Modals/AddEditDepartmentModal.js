@@ -39,6 +39,7 @@ const AddEditDepartmentModal = ({
   // }, [editedCompany, setFieldsValue]);
 
   const handleSubmit = (e) => {
+    e.stopPropagation()
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {

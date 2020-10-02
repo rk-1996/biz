@@ -69,7 +69,7 @@ const ViewEmployee = (props) => {
       {
         employeeData &&
         <Card className="gx-card">
-          <Tabs activeKey={formTab} onChange={onChangeFormTab}>
+          <Tabs className='tab-modal-timesheet' activeKey={formTab} onChange={onChangeFormTab}>
             <TabPane tab="Jobs & Pay" key={1}>
               <JobsAndPay
                 employeeData={employeeData}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Input } from 'antd';
-import { updateNotesEmployee,updateNotesContractor } from "services/people";
+import { updateNotesEmployee, updateNotesContractor } from "services/people";
 
 const { TextArea } = Input;
 
@@ -11,36 +11,38 @@ const Notes = (props) => {
     console.log(e.target.value)
     setNotes(e.target.value)
   }
-  const [notes, setNotes] = useState();
-
+  const [notes, setNotes] = useState(Data.notes);
+  console.log("employee data", Data.notes)
+  console.log("action type", actionType)
+  console.log("employee data id", Data)
+  console.log("company", activeCompany)
   let saveNoteHandler = async (e) => {
     e.preventDefault()
-    let obj = {
-      notes: notes
-    }
+
     if (actionType === 'contractor') {
-      const result = await updateNotesContractor(token, {
-        ...obj,
-        id: Data.id,
-        location: activeCompany.location,
-        company: activeCompany.company,
-        actionType: "employee",
+      let params = {
+        user: Data.cnid,
+        company: activeCompany.company
+      }
+      console.log("in action")
+      const result = await updateNotesContractor(token.accessToken, params, {
+        note: notes
       });
 
     } else {
-      const result = await updateNotesEmployee(token, {
-        ...obj,
-        id: Data.id,
-        location: activeCompany.location,
-        company: activeCompany.company,
-        actionType: "employee",
+      let params = {
+        user: Data.eid,
+        company: activeCompany.company
+      }
+      const result = await updateNotesEmployee(token.accessToken, params, {
+        note: notes,
       });
     }
   }
   return (
     <div>
       <div>
-        <TextArea onChange={noteChangeHandler} rows={20} placeholder="Notes" />
+        <TextArea onChange={noteChangeHandler} value={notes} rows={20} placeholder="Notes" />
       </div>
       <div className="gx-pt-5 text-right">
         <Button onClick={saveNoteHandler} type="primary">Save</Button>

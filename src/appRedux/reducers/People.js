@@ -8,14 +8,17 @@ import {
   PEOPLE_ERROR,
   GET_VALID_PIN,
   GET_VALID_PIN_ERROR,
-  GET_VALID_PIN_SUCCESS
+  GET_VALID_PIN_SUCCESS,
+  GET_NEW_ADDED_EMPLOYEE_EMAIL,
+  NEW_ADDED_EMPLOYEE_EMAIL
 } from 'constants/ActionTypes'
 
 const INIT_STATE = {
   error: "",
   loader: false,
   message: '',
-  people: []
+  people: [],
+  newAdedEmployeeEmail: ''
 };
 
 export default (state = INIT_STATE, action) => {
@@ -70,6 +73,17 @@ export default (state = INIT_STATE, action) => {
       return {
         ...state,
         loader: false
+      };
+    case GET_NEW_ADDED_EMPLOYEE_EMAIL:
+      return {
+        ...state,
+        loader: false
+      };
+    case NEW_ADDED_EMPLOYEE_EMAIL:
+      console.log(action.payload)
+      return {
+        ...state,
+        newAdedEmployeeEmail: action.payload
       };
     default:
       return state;

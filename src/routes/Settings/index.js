@@ -37,7 +37,7 @@ const Settings = () => {
         </Breadcrumb>
       </div>
       <Card className="gx-card" title="Settings">
-        <Tabs activeKey={formTab} onChange={onChangeFormTab}>
+        <Tabs className='tab-modal-timesheet' activeKey={formTab} onChange={onChangeFormTab}>
           <TabPane tab="Company Info" key={1}>
             <CompanyInfo />
           </TabPane>

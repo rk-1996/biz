@@ -13,7 +13,9 @@ import {
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { employeeExist } from './../../../services/people';
-
+import {
+  newAdedEmployeeEmailFun
+} from "appRedux/actions/People";
 const FormItem = Form.Item;
 
 const CheckPeopleEmail = (props) => {
@@ -21,8 +23,9 @@ const CheckPeopleEmail = (props) => {
   const { match: { params }, token, activeCompany, activeLocation } = props;
 
   const { getFieldDecorator } = props.form;
-
+  const { newAdedEmployeeEmailFun } = props
   const handleSubmit = (e) => {
+    console.log("newAdedEmployeeEmail", newAdedEmployeeEmailFun)
     e.preventDefault();
     props.form.validateFields(async (err, values) => {
       if (!err) {
@@ -34,10 +37,12 @@ const CheckPeopleEmail = (props) => {
         setloading(true)
         const result = await employeeExist(token, param, params.id);
         setloading(false)
-        if(result && (result.status === 200 || result.status === 201)) {
-          if(result.data === false) {
+        if (result && (result.status === 200 || result.status === 201)) {
+          if (result.data === false) {
+            console.log(values.email)
             message.success('No any people found with this email you can proceed');
-            if(params.id === "contractor") {
+            newAdedEmployeeEmailFun(values.email)
+            if (params.id === "contractor") {
               props.history.push('/people/add-contractor')
             } else {
               props.history.push('/people/add-employee')
@@ -68,8 +73,8 @@ const CheckPeopleEmail = (props) => {
             <span className="gx-link">
               {
                 params.id === "contractor" ?
-                <span>Add Contractor</span> :
-                <span>Add Employee</span>
+                  <span>Add Contractor</span> :
+                  <span>Add Employee</span>
               }
             </span>
           </Breadcrumb.Item>
@@ -80,13 +85,13 @@ const CheckPeopleEmail = (props) => {
         <Form onSubmit={handleSubmit} className="gx-form-row0">
           <Row>
             <Col span={12} xs={24} md={12} className="gx-p-0">
-                <FormItem label="Email" className="display-block">
-                  {getFieldDecorator("email", {
-                    rules: [{ required: true, message: "Please input email!" }],
-                  })(<Input type="text" placeholder="Email" />)}
-                </FormItem>
-              </Col>
-            </Row>
+              <FormItem label="Email" className="display-block">
+                {getFieldDecorator("email", {
+                  rules: [{ required: true, message: "Please input email!" }],
+                })(<Input type="text" placeholder="Email" />)}
+              </FormItem>
+            </Col>
+          </Row>
           <div className="flex-x center gx-pt-5">
             <FormItem>
               <Button
@@ -118,8 +123,9 @@ const mapStateToProps = (state) => {
   return {
     activeCompany: state.common.activeCompany.company,
     activeLocation: state.common.activeCompany.location,
-    token: state.auth.authUser.tokens.accessToken
+    token: state.auth.authUser.tokens.accessToken,
+    newAdedEmployeeEmail: state.people.newAdedEmployeeEmail
   };
 };
 
-export default connect(mapStateToProps, null)(withRouter(WrappedModal));
+export default connect(mapStateToProps, { newAdedEmployeeEmailFun })(withRouter(WrappedModal));

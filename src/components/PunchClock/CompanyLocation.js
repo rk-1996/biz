@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { connect } from "react-redux";
-import { Icon, Checkbox, Button } from 'antd';
-
+import { Icon, Checkbox, Button, message } from 'antd';
+import {
+  rememberLocationPunchClock
+} from "appRedux/actions/Auth";
 const CompanyLocation = (props) => {
-  const { setSelectedOption, selectedOption, setCurrentTab } = props
+  const { setSelectedOption, rememberLocationPunchClock, selectedOption, setCurrentTab } = props
   const { searchText, setLocation, companies, activeLocation } = props.props;
-
+  const [rememberMe, setRememberMe] = useState(false)
   const getCompanies = useMemo(() => {
     if (companies && companies.length) {
       console.log(companies)
@@ -19,6 +21,20 @@ const CompanyLocation = (props) => {
     setSelectedOption(l)
     // setLocation(l)
     console.log(l)
+  }
+
+  const rememberLocationHandler = (e) => {
+    if (e.target.checked) {
+      console.log("in this called")
+      setRememberMe(true)
+    }
+  }
+
+  const setNextButton = () => {
+    if (rememberMe) {
+      rememberLocationPunchClock(selectedOption)
+    }
+    setCurrentTab("pin")
   }
 
   return (
@@ -65,10 +81,10 @@ const CompanyLocation = (props) => {
                 Cafe Pesto
               </div> */}
               <div className="gx-pt-3">
-                <Checkbox value='remember'>Remember Selected Location for this Device</Checkbox>
+                <Checkbox onChange={(e) => { rememberLocationHandler(e) }}>Remember Selected Location for this Device</Checkbox>
               </div>
               <div className="text-center gx-pt-5">
-                <Button type="primary" onClick={() => setCurrentTab("pin")}>
+                <Button type="primary" onClick={() => setNextButton()}>
                   Submit
                 </Button>
               </div>
@@ -80,12 +96,14 @@ const CompanyLocation = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    companies: state.common.companies,
-    activeCompany: state.common.activeCompany.company,
-    activeLocation: state.common.activeCompany.location
-  }
+const mapStateToProps = ({ auth }) => {
+  const { alertMessage } = auth;
+  return { alertMessage }
 };
 
-export default CompanyLocation
+export default connect(mapStateToProps, {
+  rememberLocationPunchClock,
+})(CompanyLocation)
+
+
+// export default CompanyLocation

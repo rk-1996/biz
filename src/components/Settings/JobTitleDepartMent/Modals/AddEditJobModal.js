@@ -38,7 +38,8 @@ const AddEditJobModal = ({
   //   }
   // }, [editedCompany, setFieldsValue]);
 
-  const handleSubmit = (e) => {
+  const handleSubmitJobModel = (e) => {
+    e.stopPropagation()
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
@@ -58,7 +59,7 @@ const AddEditJobModal = ({
       className="hide-modal-footer"
       width={300}
     >
-      <Form onSubmit={handleSubmit} className="gx-form-row0">
+      <Form onSubmit={handleSubmitJobModel} className="gx-form-row0">
         <FormItem label="Job Title" className="display-block">
           {getFieldDecorator("jobTitle", {
             rules: [

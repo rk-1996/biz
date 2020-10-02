@@ -1,21 +1,60 @@
 import React, { useState, useEffect } from "react";
+import {
+  useHistory
+} from "react-router-dom";
+import { browserHistory } from "react-router";
 import { Button, Form, Input, message } from "antd";
 import CircularProgress from "components/CircularProgress/index";
-import { createPeoplePassword } from './../../services/people';
+import { createPeoplePassword, getUserDataByToken } from './../../services/people';
+import AppLoader from 'components/Common/AppLoader';
 
 const FormItem = Form.Item;
 
 const SetNewPassword = (props) => {
   const [confirmDirty, setConfirmDirty] = useState(false);
   const { getFieldDecorator, setFieldsValue } = props.form;
-  const { showMessage, loader, alertMessage, match: {params} } = props;
+  const { showMessage, loader, alertMessage, match: { params } } = props;
+  const [userData, setUserData] = useState('')
+  const [loading, setLoading] = useState(false);
 
+  const history = useHistory();
   console.log('params', params)
-  useEffect(() => {
+  useEffect(async () => {
+    setLoading(true)
+    console.log("called")
     setFieldsValue({
       email: "james@gmail.com",
     });
+    try {
+      let dataObj = {
+        token: params.token
+      }
+      let resultGetData = await getUserDataByToken(dataObj)
+      console.log(resultGetData)
+      if (resultGetData.status == 200) {
+        if (resultGetData.data.message === 'Invalid Token') {
+          message.success('Invailid token.')
+          // props.history.push("/signin");
+          window.location.pathname = '/signin'
+
+        } else {
+
+          setLoading(false)
+          setUserData(resultGetData.data)
+        }
+      }
+    } catch (error) {
+      setLoading(false)
+      message.error(error.message)
+    }
+    //caled api and get data by token
+
+
   }, [setFieldsValue]);
+
+  useEffect(() => {
+    console.log(userData)
+  }, [userData])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,10 +65,12 @@ const SetNewPassword = (props) => {
           password: values.password
         }
         const result = await createPeoplePassword(obj);
-        if(result.status === 201) {
+        if (result.status === 201) {
           message.success('Your Password is created! You can login.')
-          props.history.push("/signin");
+          // props.history.push("/signin");
+          window.location.pathname = '/signin'
         }
+
       }
     });
   };
@@ -50,6 +91,9 @@ const SetNewPassword = (props) => {
 
   return (
     <div className="gx-app-login-wrap">
+      {/* {
+        loading ? <CircularProgress /> : */}
+
       <div className="gx-app-login-container">
         <div className="gx-app-login-main-content">
           {/* <div className="gx-app-logo-content">
@@ -71,7 +115,8 @@ const SetNewPassword = (props) => {
               <div className="gx-fs-xxl text-center">Welcome to</div>
               <div className="gx-fs-xlxl text-center">Cafe Basil</div>
               <div className="gx-pt-4 gx-fs-lg gx-pb-4">
-                Hello, James Ferdinand!
+
+                Hello, {userData.email}!
               </div>
               <div>
                 Get started by choosing a secure password at least 8 characters
@@ -126,7 +171,7 @@ const SetNewPassword = (props) => {
               </div>
             </Form>
           </div>
-          {loader && (
+          {loading && (
             <div className="gx-loader-view">
               <CircularProgress />
             </div>
@@ -134,6 +179,7 @@ const SetNewPassword = (props) => {
           {showMessage && message.error(alertMessage)}
         </div>
       </div>
+      {/* } */}
     </div>
   );
 };

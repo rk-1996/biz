@@ -7,7 +7,8 @@ import {
   Input,
   Button,
   Radio,
-  DatePicker,
+  Tooltip,
+  DatePicker, Icon
 } from "antd";
 import moment from "moment";
 import { updateCompansationDetail } from "services/people";
@@ -28,7 +29,7 @@ const CompensationEditModal = ({
   const [loader, setLoader] = useState(false);
   const [wageType, setWageType] = useState("fixed");
   const { getFieldDecorator, setFieldsValue } = props.form;
-  const { compensation, token, params, updateSavedObj } = props;
+  const { compensation, deleteCompensation, token, params, updateSavedObj } = props;
 
   useEffect(() => {
     if (compensation) {
@@ -54,6 +55,11 @@ const CompensationEditModal = ({
       }, 300);
     }
   }, [compensation, setFieldsValue]);
+
+  const handleDelete = (e) => {
+    e.preventDefault()
+    deleteCompensation()
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -216,6 +222,12 @@ const CompensationEditModal = ({
             >
               Cancel
             </Button>
+            {/* <Tooltip placement="top" title="Delete compensation"> */}
+            <Button onClick={handleDelete} className="login-form-button" type="danger">
+              {/* <Icon type="delete" className="cursor-pointer" /> */}
+                Delete
+              </Button>
+            {/* </Tooltip> */}
             <Button
               loading={loader}
               type="primary"

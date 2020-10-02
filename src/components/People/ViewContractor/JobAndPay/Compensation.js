@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Icon, Button, Modal } from "antd";
 import CompensationEditModal from "./../EditModals/CompensationEditModal";
 import { dateFormat, dateTimeFormat } from "util/constant";
-import { getCompansationHistory } from 'services/people';
+import { getCompansationHistory, deleteCompensation } from 'services/people';
 
 const Compensation = ({ compensation, activeCompany, updateSavedObj, token, params, jobs, departments, CompensationsList }) => {
   const [history, setHistory] = useState([]);
@@ -20,6 +20,20 @@ const Compensation = ({ compensation, activeCompany, updateSavedObj, token, para
       setHistory(result.data)
     }
   }, [params, token]);
+
+  const deleteCompensation = async (compId) => {
+    try {
+      const obj = {
+        empid: params.id,
+        company: activeCompany.company,
+        location: activeCompany.location
+      }
+      const result = await deleteCompensation(token, { ...obj, actionType: 'contractor' });
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const compensationEditHandler = (values) => {
     updateSavedObj(values);
@@ -222,6 +236,7 @@ const Compensation = ({ compensation, activeCompany, updateSavedObj, token, para
         isEdit && compensation &&
         <CompensationEditModal
           compensation={compensation}
+          deleteCompensation={deleteCompensation}
           updateSavedObj={compensationEditHandler}
           token={token}
           params={params}

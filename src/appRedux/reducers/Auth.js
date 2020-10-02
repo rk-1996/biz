@@ -13,6 +13,7 @@ import {
   SIGNOUT_USER_SUCCESS,
   SIGNUP_USER_SUCCESS,
   AUTH_ERROR,
+  REMBER_LOCATION_PUNCH_CLOCK
 } from "constants/ActionTypes";
 
 const INIT_STATE = {
@@ -21,6 +22,7 @@ const INIT_STATE = {
   showMessage: false,
   initURL: '',
   authUser: null,
+  punchClockLocation: null
 };
 
 
@@ -34,11 +36,26 @@ export default (state = INIT_STATE, action) => {
       }
     }
     case SIGNIN_USER: {
+      console.log('user sign in called reducer')
       return {
         ...state,
         loader: true
       }
     }
+    case REMBER_LOCATION_PUNCH_CLOCK: {
+      console.log("in punch clock reducer", action.payload)
+      return {
+        ...state,
+        punchClockLocation: action.payload
+      }
+    }
+    // case REMBER_LOCATION_PUNCH_CLOCK: {
+    //   console.log("in punch clock reducer", action.payload)
+    //   return {
+    //     ...state,
+    //     punchClockLocation: action.payload
+    //   }
+    // }
     case SIGNIN_USER_SUCCESS: {
       return {
         ...state,

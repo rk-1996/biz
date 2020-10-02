@@ -20,6 +20,7 @@ import {
   SIGNUP_USER_SUCCESS,
   AUTH_ERROR,
   CHECK_TOKEN,
+  REMBER_LOCATION_PUNCH_CLOCK
 } from "constants/ActionTypes";
 
 export const userSignUp = (user) => {
@@ -29,6 +30,7 @@ export const userSignUp = (user) => {
   };
 };
 export const userSignIn = (user) => {
+  console.log('user sign in called')
   return {
     type: SIGNIN_USER,
     payload: user
@@ -122,6 +124,14 @@ export const showAuthLoader = () => {
     type: ON_SHOW_LOADER,
   };
 };
+
+export const rememberLocationPunchClock = (location) => {
+  console.log("called", location)
+  return {
+    type: REMBER_LOCATION_PUNCH_CLOCK,
+    payload: location
+  }
+}
 
 export const hideMessage = () => {
   return {

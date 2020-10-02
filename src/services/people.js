@@ -52,10 +52,18 @@ export const createContractor = (token, params) => {
 // Get Listing of Employee/Contractor
 export const getPeople = (token, params) => {
   setHeadersWithAccessToken(token);
-  return axios
-    .get(`${API_BASE}/people/${params.company}/${params.location}`)
-    .then(e => e)
-    .catch(e => e);
+  // console.log("api called")
+  if (params.company === params.location) {
+    return axios
+      .get(`${API_BASE}/people/${params.company}`)
+      .then(e => e)
+      .catch(e => e);
+  } else {
+    return axios
+      .get(`${API_BASE}/people/${params.company}/${params.location}`)
+      .then(e => e)
+      .catch(e => e);
+  }
 };
 
 // Get Details of perticualr Employee/Contractor
@@ -227,11 +235,27 @@ export const createPeoplePassword = (params) => {
     .catch(e => e);
 };
 
+//for delete compensation contractor
+export const deleteCompensation = (token, params) => {
+  setHeadersWithAccessToken(token);
+  if (params.type == 'employee') {
+    return axios
+      .post(`${API_BASE}/auth/create-password/${params.token}`, { password: params.password })
+      .then(e => e)
+      .catch(e => e);
+  } else {
+    return axios
+      .post(`${API_BASE}/auth/create-password/${params.token}`, { password: params.password })
+      .then(e => e)
+      .catch(e => e);
+  }
+}
+
 // Get employee detail to verify
 export const getEmployeeDetailToVerify = (token, params) => {
   setHeadersWithAccessToken(token);
   return axios
-    .get(`${API_BASE}/employee/get-employee/${params.user}/${params.company}`)
+    .get(`${API_BASE}/employee/view-employee/${params.user}/${params.company}`)
     .then(e => e)
     .catch(e => e);
 };
@@ -240,7 +264,7 @@ export const getEmployeeDetailToVerify = (token, params) => {
 export const getContractorDetailToVerify = (token, params) => {
   setHeadersWithAccessToken(token);
   return axios
-    .get(`${API_BASE}/contractor/get-contractor/${params.user}/${params.company}`)
+    .get(`${API_BASE}/contractor/view-contractor/${params.user}/${params.company}`)
     .then(e => e)
     .catch(e => e);
 };
@@ -266,8 +290,28 @@ export const getEmployeeFedrals = (token, params) => {
 // Update employee detail
 export const updateEmployeeDetail = (token, params, data) => {
   setHeadersWithAccessToken(token);
+  // return axios
+  //   .put(`${API_BASE}/employee/update-employee/${params.user}/${params.company}`, data)
+  //   .then(e => e)
+  //   .catch(e => e);
   return axios
-    .put(`${API_BASE}/employee/update-employee/${params.user}/${params.company}`, data)
+    .put(`${API_BASE}/employee/update/${params.company}/${params.location}`, data)
+    .then(e => e)
+    .catch(e => e);
+}
+
+export const addEmployeeLocation = (token, params, data) => {
+  setHeadersWithAccessToken(token);
+  return axios
+    .post(`${API_BASE}/employee/compensation/${params.company}/${params.location}/${params.user_id}`, data)
+    .then(e => e)
+    .catch(e => e);
+}
+
+export const addContractorLocation = (token, params, data) => {
+  setHeadersWithAccessToken(token);
+  return axios
+    .post(`${API_BASE}/contractor/compensation/${params.company}/${params.location}/${params.user_id}`, data)
     .then(e => e)
     .catch(e => e);
 }
@@ -316,7 +360,7 @@ export const getValidPin = (token, params) => {
 export const updateNotesEmployee = (token, params, data) => {
   setHeadersWithAccessToken(token);
   return axios
-    .put(`${API_BASE}/employee/update-employee/${params.user}/${params.company}`, data)
+    .post(`${API_BASE}/employee/view-employee/${params.user}/${params.company}`, data)
     .then(e => e)
     .catch(e => e);
 }
@@ -332,9 +376,19 @@ export const editCompanyStatusForEmployee = (token, params, data) => {
 
 //update notes in contractor
 export const updateNotesContractor = (token, params, data) => {
+  console.log("in")
   setHeadersWithAccessToken(token);
   return axios
-    .put(`${API_BASE}/employee/update-employee/${params.user}/${params.company}`, data)
+    .post(API_BASE + '/contractor/view-contractor/' + params.user + '/' + params.company, data)
+    .then(e => e)
+    .catch(e => e);
+}
+
+//get user data by token
+export const getUserDataByToken = (params) => {
+  console.log("in api called")
+  return axios
+    .get(`${API_BASE}/users/userbytoken/${params.token}`)
     .then(e => e)
     .catch(e => e);
 }

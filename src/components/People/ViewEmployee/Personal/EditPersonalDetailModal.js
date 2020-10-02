@@ -48,6 +48,7 @@ const EditPersonalDetailModal = ({
         const obj = {
           firstName: values.firstName,
           lastName: values.lastName,
+          middleName: values.middleName,
           dob: values.dob,
           phone: Number(values.phone),
           ssn: values.ssn,
@@ -55,7 +56,7 @@ const EditPersonalDetailModal = ({
             street1: values.street1,
             street2: values.street2,
             city: values.city,
-            zip: values.zip,
+            zip: parseInt(values.zip),
             state: values.state
           }
         }

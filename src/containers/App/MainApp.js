@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {Layout} from "antd";
+import { Layout } from "antd";
 import { connect } from "react-redux";
 import Sidebar from "../Sidebar/index";
 import HorizontalDefault from "../Topbar/HorizontalDefault/index";
@@ -9,10 +9,10 @@ import AboveHeader from "../Topbar/AboveHeader/index";
 import BelowHeader from "../Topbar/BelowHeader/index";
 
 import Topbar from "../Topbar/index";
-import {footerText} from "util/config";
+import { footerText } from "util/config";
 import App from "routes/index";
-import {useSelector} from "react-redux";
-import {useRouteMatch} from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useRouteMatch } from "react-router-dom";
 import {
   NAV_STYLE_ABOVE_HEADER,
   NAV_STYLE_BELOW_HEADER,
@@ -34,13 +34,14 @@ const { Content, Footer } = Layout;
 
 const MainApp = (props) => {
   const { checkToken, activeCompany, getJobRequest, getDepartmentRequest } = props;
-  const {width, navStyle} = useSelector(({settings}) => settings);
+  const { width, navStyle } = useSelector(({ settings }) => settings);
   const match = useRouteMatch();
 
   useEffect(() => {
     const params = {
       company: activeCompany
     }
+    // console.log("in application useeffect")
     // checkToken();
     getJobRequest(params);
     getDepartmentRequest(params);
@@ -64,47 +65,47 @@ const MainApp = (props) => {
   };
   const getNavStyles = (navStyle) => {
     switch (navStyle) {
-      case NAV_STYLE_DEFAULT_HORIZONTAL :
-        return <HorizontalDefault/>;
-      case NAV_STYLE_DARK_HORIZONTAL :
-        return <HorizontalDark/>;
-      case NAV_STYLE_INSIDE_HEADER_HORIZONTAL :
-        return <InsideHeader/>;
-      case NAV_STYLE_ABOVE_HEADER :
-        return <AboveHeader/>;
-      case NAV_STYLE_BELOW_HEADER :
-        return <BelowHeader/>;
-      case NAV_STYLE_FIXED :
-        return <Topbar/>;
-      case NAV_STYLE_DRAWER :
-        return <Topbar/>;
-      case NAV_STYLE_MINI_SIDEBAR :
-        return <Topbar/>;
-      case NAV_STYLE_NO_HEADER_MINI_SIDEBAR :
-        return <NoHeaderNotification/>;
-      case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR :
-        return <NoHeaderNotification/>;
-      default :
+      case NAV_STYLE_DEFAULT_HORIZONTAL:
+        return <HorizontalDefault />;
+      case NAV_STYLE_DARK_HORIZONTAL:
+        return <HorizontalDark />;
+      case NAV_STYLE_INSIDE_HEADER_HORIZONTAL:
+        return <InsideHeader />;
+      case NAV_STYLE_ABOVE_HEADER:
+        return <AboveHeader />;
+      case NAV_STYLE_BELOW_HEADER:
+        return <BelowHeader />;
+      case NAV_STYLE_FIXED:
+        return <Topbar />;
+      case NAV_STYLE_DRAWER:
+        return <Topbar />;
+      case NAV_STYLE_MINI_SIDEBAR:
+        return <Topbar />;
+      case NAV_STYLE_NO_HEADER_MINI_SIDEBAR:
+        return <NoHeaderNotification />;
+      case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR:
+        return <NoHeaderNotification />;
+      default:
         return null;
     }
   };
 
   const getSidebar = (navStyle, width) => {
     if (width < TAB_SIZE) {
-      return <Sidebar/>;
+      return <Sidebar />;
     }
     switch (navStyle) {
-      case NAV_STYLE_FIXED :
-        return <Sidebar/>;
-      case NAV_STYLE_DRAWER :
-        return <Sidebar/>;
-      case NAV_STYLE_MINI_SIDEBAR :
-        return <Sidebar/>;
-      case NAV_STYLE_NO_HEADER_MINI_SIDEBAR :
-        return <Sidebar/>;
+      case NAV_STYLE_FIXED:
+        return <Sidebar />;
+      case NAV_STYLE_DRAWER:
+        return <Sidebar />;
+      case NAV_STYLE_MINI_SIDEBAR:
+        return <Sidebar />;
+      case NAV_STYLE_NO_HEADER_MINI_SIDEBAR:
+        return <Sidebar />;
       case NAV_STYLE_NO_HEADER_EXPANDED_SIDEBAR:
-        return <Sidebar/>;
-      default :
+        return <Sidebar />;
+      default:
         return null;
     }
   };
@@ -114,11 +115,11 @@ const MainApp = (props) => {
     <Layout className="gx-app-layout">
       {getSidebar(navStyle, width)}
       <Layout>
-       <div className="header-component">
-        {getNavStyles(navStyle)}
-       </div>
+        <div className="header-component">
+          {getNavStyles(navStyle)}
+        </div>
         <Content className={`gx-layout-content ${getContainerClass(navStyle)} `}>
-          <App match={match}/>
+          <App match={match} />
           <Footer>
             <div className="gx-layout-footer-content">
               {footerText}
@@ -136,8 +137,8 @@ const mapStateToProps = (state) => {
   }
 }
 
- export default connect(mapStateToProps, {
+export default connect(mapStateToProps, {
   checkToken,
   getJobRequest,
   getDepartmentRequest
- })(MainApp);
+})(MainApp);

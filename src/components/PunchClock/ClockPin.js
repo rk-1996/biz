@@ -1,22 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { Input, Button, Modal, message } from "antd";
+import React, { useRef, useState, useEffect } from "react";
+import { Input, Button, Modal, message, Form, Row, Col } from "antd";
 import NumberKeyboard from "components/PunchClock/NumberKeyboard";
 import { getPeople, getLoginPeopleData } from './../../services/punchClock';
 import CircularProgress from "components/CircularProgress/index";
 import moment from "moment";
+import { connect } from "react-redux";
+import { userLogin, checkToken } from './../../services/auth';
+
+import {
+  userSignIn, rememberLocationPunchClock
+} from "appRedux/actions/Auth";
+const FormItem = Form.Item;
 
 const ClockPin = (props) => {
-  const { setCurrentTab, setIsTakeBreak, currentLocation, setLastACtivityStatusArr, setLastCheckInStatus, setLoginUserId, setAddedPin, setLoginUserName, token, activeLocation, activeCompany } = props
+  const { setCurrentTab, rememberLocationPunchClock, setIsTakeBreak, currentLocation, setLastACtivityStatusArr, setLastCheckInStatus, setLoginUserId, setAddedPin, setLoginUserName, token, activeLocation, activeCompany } = props
   const [pin, setpin] = useState("");
   const [confirm, setConfirm] = useState(false);
   const [loader, setLoader] = useState(false)
-
+  const [openCradentialModal, setOpenCradentialModal] = useState(false)
+  const { getFieldDecorator, setFieldsValue } = props.form;
+  const pinTxt = useRef(null);
   useEffect(() => {
     if (pin.length === 4) {
       setLoader(true)
       let result = getUserData()
     }
   }, [pin, setCurrentTab]);
+
+  useEffect(() => {
+    pinTxt.current.focus();
+  }, [])
 
   let getUserData = async () => {
     console.log(pin)
@@ -145,6 +158,50 @@ const ClockPin = (props) => {
     }
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    props.form.validateFields(async (err, values) => {
+      if (!err) {
+        setLoader(true);
+        console.log("values", values);
+        const obj = {
+          email: values.email,
+          password: values.password,
+          type: "punch"
+        }
+        // let result = props.userSignIn({ ...values, type: 'punch' });
+        // console.log(result)
+        try {
+          let result = await userLogin(obj);
+          setLoader(false);
+          console.log(result)
+          if (result.status === 201) {
+            console.log("activeCompany", activeCompany)
+            // if (result.data.user.company)
+            handleCancel();
+            rememberLocationPunchClock(null)
+            setCurrentTab('location')
+          }
+
+        } catch (error) {
+          message.error(error)
+        }
+
+      }
+    });
+  };
+
+  const handleCancel = () => {
+    setConfirm(false)
+    setOpenCradentialModal(false)
+  }
+
+  const changePin = (e) => {
+    console.log(e.target.value)
+    console.log()
+    setpin(String(e.target.value))
+  }
+
   const onKeyPress = (key) => {
     if (key === "clear") {
       setpin("");
@@ -175,7 +232,9 @@ const ClockPin = (props) => {
               <div className="pin-input">
                 <Input.Password
                   className="text-center"
+                  ref={pinTxt}
                   value={pin}
+                  onChange={(e) => changePin(e)}
                   type="password"
                 />
               </div>
@@ -202,12 +261,65 @@ const ClockPin = (props) => {
                     <Button type="danger" onClick={() => setConfirm(false)}>
                       Cancel
                   </Button>
-                    <Button type="primary" onClick={() => setCurrentTab("location")}>
+                    <Button type="primary" onClick={() => setOpenCradentialModal(true)}>
                       Change Location
                   </Button>
                   </div>
                 </div>
               </Modal>
+
+              {/* add credential for change location */}
+              <Modal
+                title="Change location."
+                visible={openCradentialModal}
+                onCancel={handleCancel}
+                className="hide-modal-footer"
+              >
+                {loader ?
+                  <div className="gx-loader-view">
+                    <CircularProgress />
+                  </div> :
+                  <Form onSubmit={handleSubmit} className="gx-form-row0">
+                    <Row>
+                      <Col span={12} xs={24} md={12}>
+                        <FormItem label="Email" className="display-block">
+                          {getFieldDecorator("email", {
+                            rules: [{ required: true, message: "Please input email!" }],
+                          })(<Input type="text" placeholder="Email" />)}
+                        </FormItem>
+                      </Col>
+                      <Col span={12} xs={24} md={12}>
+                        <FormItem label="Password" className="display-block">
+                          {getFieldDecorator("password", {
+                            rules: [{ required: true, message: "Please input password!" }],
+                          })(<Input type="password" placeholder="Password" />)}
+                        </FormItem>
+                      </Col>
+
+                    </Row>
+                    <div className="flex-x center gx-mt-4">
+                      <FormItem className="gx-m-0">
+                        <Button
+                          type="secondary"
+                          className="login-form-button"
+                          onClick={handleCancel}
+                        >
+                          Cancel
+                      </Button>
+                        <Button
+                          loading={loader}
+                          type="primary"
+                          htmlType="submit"
+                          className="login-form-button"
+                        >
+                          Change location
+                      </Button>
+                      </FormItem>
+                    </div>
+                  </Form>
+                }
+              </Modal>
+
             </div>
           </div>
         </div>
@@ -216,4 +328,16 @@ const ClockPin = (props) => {
   );
 };
 
-export default ClockPin;
+const ClockPinModal = Form.create()(ClockPin);
+
+const mapStateToProps = ({ auth }) => {
+  const { alertMessage } = auth;
+  return { alertMessage }
+};
+
+export default connect(mapStateToProps, {
+  userSignIn,
+  rememberLocationPunchClock
+})(ClockPinModal)
+
+// export default ;

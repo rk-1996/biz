@@ -14,6 +14,7 @@ const VerifyProfileSteps = (props) => {
   const [loading, setLoading] = useState(false);
   const { match: { params } } = props;
   const { authUser } = useSelector(state => state.auth);
+  const [addedLocation, setAddedLocation] = useState('')
 
   useEffect(() => {
     const getDetails = async () => {
@@ -50,7 +51,7 @@ const VerifyProfileSteps = (props) => {
     const response = await updateContractorDetail(authUser.tokens.accessToken, obj, formValues);
     if (response.status === 200 || response.status === 201) {
       message.success("Contractor data successfully updated.");
-      props.history.push("/people");
+      props.history.push("/overview");
     } else {
       message.error("Please try again !");
     }
@@ -68,8 +69,10 @@ const VerifyProfileSteps = (props) => {
       {loading && <AppLoader />}
       {currentStep === "welcome" ? (
         <WelcomePage
+          employeeData={formValues}
           setCurrentStep={setCurrentStep}
           completedStep={completedStep}
+          setAddedLocation={setAddedLocation}
         />
       ) : currentStep === 1 && (
         <PersonalDetails

@@ -35,7 +35,7 @@ const SelectDepartment = ({
     setcreateDepartmentLoader(true);
     const result = await createDepartment(authUser.tokens.accessToken, params);
     setcreateDepartmentLoader(false);
-    if(result.status === 201) {
+    if (result.status === 201) {
       const params = {
         company: activeCompany
       }
@@ -47,40 +47,40 @@ const SelectDepartment = ({
 
   return (
     <>
-    <Select
-      placeholder="Select Jobs"
-      defaultValue={selected ? selected : null}
-      onChange={onChangeSelect}
-      dropdownRender={menu => (
-        <div>
-          {menu}
-          <Divider style={{ margin: '4px 0' }} />
-          <div
-            style={{ padding: '4px 8px', cursor: 'pointer' }}
-            onMouseDown={e => e.preventDefault()}
-            onClick={() => setOpenModal(true)}
-          >
-            <Icon type="plus" /> Add Department
+      <Select
+        placeholder="Select Jobs"
+        defaultValue={selected ? selected : null}
+        onChange={onChangeSelect}
+        dropdownRender={menu => (
+          <div>
+            {menu}
+            <Divider style={{ margin: '4px 0' }} />
+            <div
+              style={{ padding: '4px 8px', cursor: 'pointer' }}
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => setOpenModal(true)}
+            >
+              <Icon type="plus" /> Add Department
           </div>
-        </div>
-      )}
-    >
-      {
-        departments && departments.length ?
-        departments.map((j,i) => {
-          return (
-            <Option value={j.department} key={i}>{ j.department }</Option>
-          )
-        }) : ""
-      }
-    </Select>
-    <AddEditDepartmentModal
-      title="Add New Department"
-      visible={openModal}
-      handleOk={createDepartmentHandler}
-      handleCancel={() => setOpenModal(false)}
-      createDepartmentLoader={createDepartmentLoader}
-    />
+          </div>
+        )}
+      >
+        {
+          departments && departments.length ?
+            departments.map((j, i) => {
+              return (
+                <Option value={j.department} key={i}>{j.department}</Option>
+              )
+            }) : ""
+        }
+      </Select>
+      <AddEditDepartmentModal
+        title="Add New Department"
+        visible={openModal}
+        handleOk={createDepartmentHandler}
+        handleCancel={() => setOpenModal(false)}
+        createDepartmentLoader={createDepartmentLoader}
+      />
     </>
   );
 };
@@ -91,8 +91,8 @@ const mapStateToProps = (state) => {
     activeCompany: state.common.activeCompany.company,
     authUser: state.auth.authUser
   }
- };
+};
 
- export default connect(mapStateToProps, {
+export default connect(mapStateToProps, {
   getDepartmentRequest
- })(SelectDepartment);
+})(SelectDepartment);

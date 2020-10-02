@@ -37,14 +37,18 @@ const VerifyProfileSteps = (props) => {
   const [currentStep, setCurrentStep] = useState('welcome');
   const [formValues, setFormValues] = useState({});
   const [loading, setLoading] = useState(false);
+  const [addedLocation, setAddedLocation] = useState('')
   const { match: { params } } = props;
+  let { location } = props
   const { authUser } = useSelector(state => state.auth);
 
   useEffect(() => {
     const getDetails = async () => {
+      console.log("location", authUser.user.companies[0].company)
       const obj = {
-        user: params.token,
+        user: authUser.user.uid,
         company: authUser.user.companies[0].company,
+        location: location
       }
       setLoading(true);
       const result = await getEmployeeDetailToVerify(authUser.tokens.accessToken, obj);
@@ -69,14 +73,16 @@ const VerifyProfileSteps = (props) => {
   };
 
   const updateEmployee = async () => {
+    console.log(authUser)
     const obj = {
       user: params.token,
       company: authUser.user.companies[0].company,
+      location: addedLocation
     }
     const response = await updateEmployeeDetail(authUser.tokens.accessToken, obj, formValues);
     if (response.status === 200 || response.status === 201) {
       message.success("Employee data successfully updated.");
-      props.history.push("/people");
+      props.history.push("/overview");
     } else {
       message.error("Please try again !");
     }
@@ -98,6 +104,8 @@ const VerifyProfileSteps = (props) => {
             setCurrentStep={setCurrentStep}
             completedStep={completedStep}
             isEmployee={true}
+            employeeData={formValues}
+            setAddedLocation={setAddedLocation}
           />
         ) : currentStep === 1 ? (
           <PersonalDetails
@@ -111,6 +119,7 @@ const VerifyProfileSteps = (props) => {
             setCurrentStep={setCurrentStep}
             completedStep={completedStep}
             uid={params.token}
+            addedLocation={addedLocation}
           />
         )
         //  : (

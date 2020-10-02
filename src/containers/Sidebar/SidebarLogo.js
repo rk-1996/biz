@@ -1,8 +1,8 @@
 import React from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {Link} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-import {onNavStyleChange, toggleCollapsedSideNav} from "appRedux/actions/Setting";
+import { onNavStyleChange, toggleCollapsedSideNav } from "appRedux/actions/Setting";
 import {
   NAV_STYLE_DRAWER,
   NAV_STYLE_FIXED,
@@ -15,13 +15,13 @@ import {
 
 const SidebarLogo = () => {
   const dispatch = useDispatch();
-  const {width, themeType, navCollapsed} = useSelector(({settings}) => settings);
-  let navStyle = useSelector(({settings}) => settings.navStyle);
+  const { width, themeType, navCollapsed } = useSelector(({ settings }) => settings);
+  let navStyle = useSelector(({ settings }) => settings.navStyle);
   if (width < TAB_SIZE && navStyle === NAV_STYLE_FIXED) {
     navStyle = NAV_STYLE_DRAWER;
   }
   return (
-    <div className="gx-layout-sider-header">
+    <div className="gx-layout-sider-header sidebar-header-color">
       {(navStyle === NAV_STYLE_FIXED || navStyle === NAV_STYLE_MINI_SIDEBAR) ? <div className="gx-linebar">
 
         <i
@@ -40,12 +40,12 @@ const SidebarLogo = () => {
         />
       </div> : null}
 
-      <Link to="/" className="gx-site-logo">
+      <Link to="/" className="gx-site-logo custom-sidebar-design">
         {navStyle === NAV_STYLE_NO_HEADER_MINI_SIDEBAR && width >= TAB_SIZE ?
-          <img alt="" src={require("assets/images/w-logo.png")}/> :
+          <img alt="" src={require("assets/images/w-logo.png")} /> :
           themeType === THEME_TYPE_LITE ?
-            <img alt="" src={require("assets/images/logo-white.png")}/> :
-            <div style={{ color: "#fff" }}>Biz Manage</div>}
+            <img alt="" src={require("assets/images/logo-white.png")} /> :
+            <div style={{ color: "#fff" }}>Biz <span style={{ padding: '1px', color: "rgb(109, 151, 101)", backgroundColor: '#fff' }}>Vibe</span></div>}
       </Link>
 
     </div>

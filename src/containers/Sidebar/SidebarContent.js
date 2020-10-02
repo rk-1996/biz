@@ -13,14 +13,15 @@ import {
 import IntlMessages from "../../util/IntlMessages";
 import { commonGetCompanyRequest, setActiveCompany } from 'appRedux/actions/Common';
 import { useSelector } from "react-redux";
+import { auth } from "firebase";
 
 const MenuItemGroup = Menu.ItemGroup;
 const { Option, OptGroup } = Select;
 
 const SidebarContent = (props) => {
   const [searchText, setSearchText] = useState("");
-  const { companies, activeCompany, activeLocation, commonGetCompanyRequest, setActiveCompany } = props;
-
+  const { companies, activeCompany, activeLocation, auth, commonGetCompanyRequest, setActiveCompany } = props;
+  console.log('authUser in sidebar', auth)
   const getCompanies = useMemo(() => {
     if (companies && companies.length) {
       return companies.filter(a =>
@@ -50,6 +51,7 @@ const SidebarContent = (props) => {
   const defaultOpenKeys = selectedKeys.split('/')[1];
 
   const onChangeCompany = (location) => {
+    console.log(location)
     const activeCompany = getCompanies.find(c => c.locations[0] && c.locations.map(l => l.lid).includes(location))
     if (activeCompany) {
       const obj = {
@@ -61,12 +63,19 @@ const SidebarContent = (props) => {
       //set function for select all location of the company
 
       const activeCompany = getCompanies.find(c => c.cid == location)
+      const obj = {
+        company: activeCompany.cid,
+        location
+      }
       console.log(activeCompany)
+      setActiveCompany(obj);
     }
   }
 
   return (
     <>
+      <SidebarLogo />
+
       {
         (companies.length && activeCompany) ?
           <div className="company-select-menu">
@@ -98,17 +107,13 @@ const SidebarContent = (props) => {
             </Select>
           </div> : ""
       }
-      <SidebarLogo />
       <div className="gx-sidebar-content">
-        <div className={`gx-sidebar-notifications ${getNoHeaderClass(navStyle)}`}>
-          <UserProfile />
-          {/* <AppsNavigation/> */}
-        </div>
+
         <CustomScrollbars className="gx-layout-sider-scrollbar">
           <Menu
             defaultOpenKeys={[defaultOpenKeys]}
             selectedKeys={[selectedKeys]}
-            theme={themeType === THEME_TYPE_LITE ? 'lite' : 'dark'}
+            theme={themeType === THEME_TYPE_LITE ? 'lite' : 'lite'}
             mode="inline">
             <Menu.Item key="overview">
               <Link to="/overview"><i className="icon icon-widgets" />
@@ -122,14 +127,20 @@ const SidebarContent = (props) => {
               <Link to="/schedule"><i className="icon icon-widgets"/>
                 <span><IntlMessages id="sidebar.schedule"/></span></Link>
             </Menu.Item>*/}
-            <Menu.Item key="timesheet">
+            <Menu.Item key="timesheet" className='mb-10px'>
               <Link to="/timesheet"><Icon type="clock-circle" />
                 <span><IntlMessages id="sidebar.timesheet" /></span></Link>
             </Menu.Item>
-            <Menu.Item key="people">
-              <Link to="/people"><i className="icon icon-avatar -flex-column-reverse" />
-                <span><IntlMessages id="sidebar.people" /></span></Link>
-            </Menu.Item>
+            {
+              (auth.authUser.user.companies.map((val, index) => {
+                return (val.permissions === "admin") ?
+                  <Menu.Item key="people">
+                    <Link to="/people"><i className="icon icon-avatar -flex-column-reverse" />
+                      <span><IntlMessages id="sidebar.people" /></span></Link>
+                  </Menu.Item> : ''
+              }))
+            }
+
             <Menu.Item key="settings">
               <Link to="/settings"><i className="icon icon-setting" />
                 <span><IntlMessages id="sidebar.settings" /></span></Link>
@@ -146,6 +157,10 @@ const SidebarContent = (props) => {
             </MenuItemGroup>
           </Menu>
         </CustomScrollbars>
+        <div className={`gx-sidebar-notifications ${getNoHeaderClass(navStyle)}`}>
+          <UserProfile />
+          {/* <AppsNavigation/> */}
+        </div>
       </div>
     </>
   );
@@ -157,7 +172,8 @@ const mapStateToProps = (state) => {
   return {
     companies: state.common.companies,
     activeCompany: state.common.activeCompany.company,
-    activeLocation: state.common.activeCompany.location
+    activeLocation: state.common.activeCompany.location,
+    auth: state.auth
   }
 };
 

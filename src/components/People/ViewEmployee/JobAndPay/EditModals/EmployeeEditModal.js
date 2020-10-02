@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Form, Modal, DatePicker, Row, Col, Input, Select, Button } from "antd";
 import moment from 'moment';
 import { updateEmploymentDetail } from 'services/people';
+import SelectDepartment from 'components/Common/SelectDepartment';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-const EmployeeEditModal = ({ visible, handleOk, handleCancel, activeCompany, ...props }) => {
+const EmployeeEditModal = ({ visible, handleOk, department, handleCancel, activeCompany, ...props }) => {
   const [loader, setLoader] = useState(false);
   const { getFieldDecorator, setFieldsValue } = props.form;
   const { employmentDetails, token, params, updateSavedObj } = props;
@@ -62,6 +63,17 @@ const EmployeeEditModal = ({ visible, handleOk, handleCancel, activeCompany, ...
               {getFieldDecorator("pin", {
                 rules: [{ required: true, message: "Please input pin!" }],
               })(<Input placeholder="Pin" />)}
+            </FormItem>
+          </Col>
+          <Col span={8} xs={24} md={12}>
+            <FormItem label="Department" className="display-block">
+              {getFieldDecorator("department", {
+                rules: [
+                  { required: true, message: "Please select department!" },
+                ],
+              })(
+                <SelectDepartment selected={department} />
+              )}
             </FormItem>
           </Col>
           <Col span={12} xs={24} md={12}>

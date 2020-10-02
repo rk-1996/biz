@@ -10,7 +10,8 @@ import {
 } from "components/People/AddPeople/index";
 import {
   addEmployeeRequest,
-  getValidPinRequest
+  getValidPinRequest,
+  getPeopleRequest
 } from "appRedux/actions/People";
 
 var randomize = require('randomatic');
@@ -35,9 +36,12 @@ const AddPeople = (props) => {
     getValidPinRequest,
     loader = false,
     jobs,
+    people = [],
     departments,
     companies,
-    token
+    token,
+    getPeopleRequest,
+    newAdedEmployeeEmail
   } = props;
 
   useEffect(() => {
@@ -47,6 +51,28 @@ const AddPeople = (props) => {
   const activeCompanyDetails = useMemo(() => {
     return companies.find(a => a.cid === activeCompany)
   }, [companies, activeCompany])
+
+  useEffect(() => {
+    console.log("newAdedEmployeeEmail", newAdedEmployeeEmail)
+    if (newAdedEmployeeEmail === '') {
+      props.history.push("/people")
+    }
+  }, [])
+
+  useEffect(() => {
+    const getCompany = companies.find(a => a.cid === activeCompany);
+    if (getCompany && getCompany.locations && getCompany.locations.length && getCompany.locations[0]) {
+      const getLocationId = activeLocation ? activeLocation : getCompany.locations[0].lid
+      const obj = {
+        company: activeCompany,
+        dissmissed: false,
+        location: getLocationId
+      };
+      getPeopleRequest(obj);
+    } else {
+      message.error('No Location found!');
+    }
+  }, [activeCompany, getPeopleRequest, companies, activeLocation]);
 
   const onChangeFormTab = (key) => {
     setFormTab(key);
@@ -64,6 +90,19 @@ const AddPeople = (props) => {
       }
     })
   }
+
+  const getPeopleWithKey = useMemo(() => {
+    console.log(people)
+    if (people.length) {
+      return people.map((p) => {
+        return {
+          ...p,
+          key: p.id,
+        };
+      });
+    }
+    return [];
+  }, [people]);
 
   const autoGeneratePin = () => {
     let generatedPin = randomize('0', 4);
@@ -175,9 +214,10 @@ const AddPeople = (props) => {
         </Breadcrumb>
       </div>
       <Card className="gx-card" title="Add Employee">
-        <Tabs activeKey={formTab} onChange={onChangeFormTab}>
+        <Tabs className='tab-modal-timesheet' activeKey={formTab} onChange={onChangeFormTab}>
           <TabPane tab="Basics" key={1}>
             <Basics
+              prefillEmail={newAdedEmployeeEmail}
               setFormTab={setFormTab}
               onCompleteDetail={onCompleteDetail}
               checkedValidPin={getValidPin}
@@ -194,6 +234,7 @@ const AddPeople = (props) => {
               setFormTab={setFormTab}
               onCompleteDetail={onCompleteDetail}
               jobs={jobs}
+              people={people}
               departments={departments}
               activeCompanyDetails={activeCompanyDetails}
             />
@@ -224,12 +265,15 @@ const mapStateToProps = (state) => {
     loader: state.people.loader,
     jobs: state.common.jobs,
     departments: state.common.departments,
+    people: state.people.people,
     companies: state.common.companies,
     token: state.auth.authUser.tokens.accessToken,
+    newAdedEmployeeEmail: state.people.newAdedEmployeeEmail
   }
 };
 
 export default connect(mapStateToProps, {
   addEmployeeRequest,
   getValidPinRequest,
+  getPeopleRequest
 })(AddPeople);

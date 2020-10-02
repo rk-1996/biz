@@ -8,8 +8,9 @@ import { getJobRequest } from 'appRedux/actions/Common';
 
 
 const PunchClock = (props) => {
-  const { companies, activeCompany, token, activeLocation, loader, getJobRequest, commonGetCompanyRequest, jobs, setActiveCompany } = props;
-
+  const { companies, rememberLocation, activeCompany, token, activeLocation, loader, getJobRequest, commonGetCompanyRequest, jobs, setActiveCompany } = props;
+  console.log("jobs ib index punch clock", jobs)
+  console.log("remember me location", rememberLocation)
   const [currentTab, setCurrentTab] = useState("location");
   const [loginUserName, setLoginUserName] = useState();
   const [loginUserId, setLoginUserId] = useState();
@@ -31,6 +32,12 @@ const PunchClock = (props) => {
     }
     commonGetCompanyRequest(obj)
 
+    if (rememberLocation) {
+      console.log("in this condition")
+      setSelectedOption(rememberLocation)
+      setCurrentTab("pin")
+    }
+
   }, [])
 
   useEffect(() => {
@@ -38,9 +45,9 @@ const PunchClock = (props) => {
     const params = {
       company: activeCompany
     }
-    // let jobReqData = getJobRequest(params);
+    getJobRequest(params);
     setJobData(jobs)
-  }, [addedPin])
+  }, [addedPin, activeCompany])
 
   return (
     <div>
@@ -95,7 +102,8 @@ const mapStateToProps = (state) => {
     activeLocation: state.common.activeCompany.location,
     token: state.auth.authUser.tokens.accessToken,
     jobs: state.common.jobs,
-    loader: state.people.loader
+    loader: state.people.loader,
+    rememberLocation: state.auth.punchClockLocation
   }
 };
 

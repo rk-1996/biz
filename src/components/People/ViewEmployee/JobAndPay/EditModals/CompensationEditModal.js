@@ -85,7 +85,7 @@ const CompensationEditModal = ({
               )}
             </FormItem>
           </Col>
-          <Col span={8} xs={24} md={12}>
+          {/* <Col span={8} xs={24} md={12}>
             <FormItem label="Department" className="display-block">
               {getFieldDecorator("department", {
                 rules: [
@@ -95,7 +95,7 @@ const CompensationEditModal = ({
                 <SelectDepartment selected={compensation.department} />
               )}
             </FormItem>
-          </Col>
+          </Col> */}
           <Col span={12} xs={24} md={12}>
             <FormItem label="Effective Date" className="display-block">
               {getFieldDecorator("effectiveDate", {

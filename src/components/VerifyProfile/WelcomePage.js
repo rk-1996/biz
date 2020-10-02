@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "antd";
 
-const WelcomePage = ({ setCurrentStep, isEmployee }) => {
+const WelcomePage = ({ setCurrentStep, isEmployee, employeeData, setAddedLocation }) => {
+  console.log(employeeData)
+  const [location, setLocation] = useState('')
+
+  useEffect(() => {
+    if (employeeData.user) {
+      setLocation(employeeData.user.locations[0].location.name)
+      setAddedLocation(employeeData.user.locations[0].location.lid)
+    }
+  }, [employeeData])
+
   return (
+
     <div className="gx-app-login-container">
       <div className="gx-app-login-main-content">
         <div
@@ -11,9 +22,9 @@ const WelcomePage = ({ setCurrentStep, isEmployee }) => {
         >
           <div className="gx-pb-5">
             <div className="gx-fs-xxl text-center">Welcome to</div>
-            <div className="gx-fs-xlxl text-center gx-pb-5">Cafe Basil</div>
+            <div className="gx-fs-xlxl text-center gx-pb-5">{location}</div>
             <div className="gx-pt-5 gx-fs-lg gx-pb-4">
-              Hello, James Ferdinand!
+              Hello, {employeeData.firstName} {employeeData.lastName}!
             </div>
             <div>Let’s set your account so you can get paid. We’ll need:</div>
             <div className="gx-pt-5 gx-pb-5">
@@ -39,29 +50,6 @@ const WelcomePage = ({ setCurrentStep, isEmployee }) => {
             </div>
           </div>
         </div>
-        {/* <div className="gx-app-logo-content" style={{width: "100%"}}>
-          <div className="gx-app-logo-content-bg">
-            <img src={require('assets/images/appModule/neature.jpg')} alt='Neature'/>
-          </div>
-          <div className="gx-app-logo-wid">
-            <h1>Welcome to Cafe Basil</h1>
-            <div>Hello, James Ferdinand!</div>
-            <div>Let’s set your account so you can get paid. We’ll need:</div>
-            <ul className="gx-pt-3">
-              <li>
-                Your Personal Information
-              </li>
-              <li>
-                Tax Witholding Information
-              </li>
-            </ul>
-            <div className="text-center gx-pt-4">
-              <Button className="gx-mb-0" onClick={() => setCurrentStep(1)}>
-                Let’s Get Started
-              </Button>
-            </div>
-          </div>
-        </div> */}
       </div>
     </div>
   );
