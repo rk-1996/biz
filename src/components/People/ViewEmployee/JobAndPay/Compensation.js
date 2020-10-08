@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Icon, Button, Modal } from "antd";
-import { getCompansationHistory } from 'services/people';
+import { getCompansationHistory, deleteCompensation } from 'services/people';
 import CompensationEditModal from "./EditModals/CompensationEditModal";
 import { dateTimeFormat, dateFormat } from "util/constant";
 
@@ -18,6 +18,9 @@ const Compensation = ({ compensation, addCompenstationHandle, activeCompany, upd
     }
     const result = await getCompansationHistory(token, { ...obj, actionType: 'employee' });
     if (result.status === 200) {
+      result.data.push(compensation)
+      console.log('compensation', compensation)
+      console.log('result.data', result.data)
       setHistory(result.data)
     }
   }, [params, token]);
@@ -29,6 +32,20 @@ const Compensation = ({ compensation, addCompenstationHandle, activeCompany, upd
   const compensationEditHandler = (values) => {
     updateSavedObj(values);
     getHistory();
+  }
+
+  const deleteCompensation = async (compId) => {
+    try {
+      const obj = {
+        empid: params.id,
+        company: activeCompany.company,
+        location: activeCompany.location
+      }
+      const result = await deleteCompensation(token, { ...obj, actionType: 'contractor' });
+
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -164,6 +181,7 @@ const Compensation = ({ compensation, addCompenstationHandle, activeCompany, upd
       {
         isEdit && compensation &&
         <CompensationEditModal
+          deleteCompensation={deleteCompensation}
           compensation={compensation}
           visible={isEdit}
           handleOk={() => setIsEdit(false)}

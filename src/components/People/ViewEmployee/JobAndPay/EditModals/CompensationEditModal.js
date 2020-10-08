@@ -17,7 +17,7 @@ const CompensationEditModal = ({
 }) => {
   const [loader, setLoader] = useState(false);
   const { getFieldDecorator, setFieldsValue } = props.form;
-  const { compensation, token, params, updateSavedObj, jobs, departments } = props;
+  const { compensation, token, deleteCompensation, params, updateSavedObj, jobs, departments } = props;
 
   useEffect(() => {
     if (compensation) {
@@ -65,6 +65,11 @@ const CompensationEditModal = ({
       }
     });
   };
+
+  const handleDelete = (e) => {
+    e.preventDefault()
+    deleteCompensation()
+  }
 
   return (
     <Modal
@@ -168,6 +173,10 @@ const CompensationEditModal = ({
             >
               Cancel
             </Button>
+            <Button onClick={handleDelete} className="login-form-button" type="danger">
+              {/* <Icon type="delete" className="cursor-pointer" /> */}
+                Delete
+              </Button>
             <Button
               loading={loader}
               type="primary"

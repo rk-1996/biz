@@ -105,7 +105,7 @@ const AddContractor = (props) => {
         // status: formValues.status,
         defaultAmount: formValues.defaultAmount ? Number(formValues.defaultAmount) : null,
         type: formValues.wageType,
-        hourlyAmount: formValues.hourlyAmount ? Number(formValues.hourlyAmount) : null,
+        rate: formValues.hourlyAmount ? Number(formValues.hourlyAmount) : null,
         department: formValues.department,
         startDate: new Date(moment(formValues.startDate._d).format("YYYY-MM-DD")).toISOString(),
         defaultHours: formValues.defaultHours ? formValues.defaultHours : null,

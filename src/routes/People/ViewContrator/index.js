@@ -68,6 +68,19 @@ const ViewContrator = (props) => {
       {
         contractorData &&
         <Card className="gx-card">
+          <div className='align-center flex-x'>
+            <div className='employee-details-profile-div'>
+              <img className='border-radius-50' src={require("assets/images/avatar/domnic-harris.png")} />
+            </div>
+            <div>
+              <div>
+                <span>{contractorData.firstName + ' ' + contractorData.lastName}</span>
+              </div>
+              <div>
+
+              </div>
+            </div>
+          </div>
           <Tabs activeKey={formTab} onChange={onChangeFormTab}>
             <TabPane tab="Jobs & Pay" key={1}>
               <JobsAndPay

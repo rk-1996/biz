@@ -41,6 +41,12 @@ const PunchClock = (props) => {
   }, [])
 
   useEffect(() => {
+    if (jobs == '') {
+      console.log("not getting data")
+    }
+  }, [jobs])
+
+  useEffect(() => {
     console.log(selectedOption)
     const params = {
       company: activeCompany

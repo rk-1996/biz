@@ -10,6 +10,7 @@ import {
   Input,
   Popconfirm,
   Checkbox,
+  Select,
   message
 } from "antd";
 import { connect, useSelector } from "react-redux";
@@ -18,9 +19,11 @@ import { getPeopleRequest } from "appRedux/actions/People";
 import AppLoader from "components/Common/AppLoader";
 import { mobileFormat } from 'util/constant';
 import { dissmissedPeople } from 'services/people';
-
+import SelectJob from './SelectJob';
+import SelectDepartment from './SelectDepartment';
 const TabPane = Tabs.TabPane;
 const { Search } = Input;
+const { Option } = Select;
 
 const ListPeople = (props) => {
   const [dissmissed, setDissmissed] = useState(false);
@@ -28,7 +31,7 @@ const ListPeople = (props) => {
   const [searchText, setSearchText] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const { company, location } = useSelector(x => x.common.activeCompany);
-
+  // const [activeLocation, setActiveLodation] = useState("")
   const {
     getPeopleRequest,
     activeCompany,
@@ -153,6 +156,7 @@ const ListPeople = (props) => {
       title: "Location",
       dataIndex: "type",
       key: "location",
+      dataIndex: "location.name",
     },
     {
       title: "Status",
@@ -250,19 +254,27 @@ const ListPeople = (props) => {
     setStatus(Number(key));
   };
 
-  // const activeCompanyDetails = useMemo(() => {
-  //   return companies.find(a => a.cid === activeCompany)
-  // }, [companies, activeCompany]);
+  const activeCompanyDetails = useMemo(() => {
+    return companies.find(a => a.cid === activeCompany)
+  }, [companies, activeCompany]);
 
-  // const handleChangeLocation = (e) => {
-  //   setActiveLodation(e);
-  //   const obj = {
-  //     company: activeCompany,
-  //     location: e,
-  //     dissmissed: false,
-  //   };
-  //   getPeopleRequest(obj);
-  // }
+  const SetJobHandler = (e) => {
+    console.log(e)
+  }
+
+  const SetDepartmentHandler = (e) => {
+    console.log(e)
+  }
+
+  const handleChangeLocation = (e) => {
+    // setActiveLodation(e);
+    const obj = {
+      company: activeCompany,
+      location: e,
+      dissmissed: false,
+    };
+    getPeopleRequest(obj);
+  }
 
   return (
     <div>
@@ -297,29 +309,36 @@ const ListPeople = (props) => {
               style={{ width: 200 }}
             />
           </div>
-          <div className="flex-1 gx-mb-3 gx-ml-4">
-            <Checkbox checked={dissmissed} onChange={(e) => setDissmissed(e.target.checked)}>Show Dismissed</Checkbox>
-          </div>
-          {/* {
-            activeCompanyDetails &&  activeCompanyDetails.locations[0] && activeCompanyDetails.locations.length &&
-            <div className="gx-mb-3 gx-mr-4">
+          {
+            activeCompanyDetails && activeCompanyDetails.locations[0] && activeCompanyDetails.locations.length &&
+            <div className="gx-mb-3 gx-ml-4">
               <Select
-                style={{ width: 150 }}
+                style={{ width: 120 }}
                 placeholder="Select Location"
                 defaultValue={(activeCompanyDetails.locations && activeCompanyDetails.locations.length) ? activeCompanyDetails.locations[0].lid : ''}
                 onChange={handleChangeLocation}
               >
                 {
                   activeCompanyDetails && activeCompanyDetails.locations && activeCompanyDetails.locations.length ?
-                  activeCompanyDetails.locations.map((c,i) => {
-                    return (
-                      <Option value={c.lid}>{c.name}</Option>
-                    )
-                  }) : ""
+                    activeCompanyDetails.locations.map((c, i) => {
+                      return (
+                        <Option value={c.lid}>{c.name}</Option>
+                      )
+                    }) : ""
                 }
               </Select>
             </div>
-          } */}
+          }
+          <div className='gx-mb-3 gx-ml-4'>
+            <SelectDepartment onChange={(e) => { SetDepartmentHandler(e) }} />
+          </div>
+          <div className='gx-mb-3 gx-ml-4'>
+            <SelectJob onChange={(e) => { SetJobHandler(e) }} />
+          </div>
+          <div className="flex-1 gx-mb-3 gx-ml-4">
+            <Checkbox checked={dissmissed} onChange={(e) => setDissmissed(e.target.checked)}>Show Dismissed</Checkbox>
+          </div>
+
           <div>
             <Button
               className='btn-theme-color-grey'

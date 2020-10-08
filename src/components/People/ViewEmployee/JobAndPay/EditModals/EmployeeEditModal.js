@@ -3,11 +3,12 @@ import { Form, Modal, DatePicker, Row, Col, Input, Select, Button } from "antd";
 import moment from 'moment';
 import { updateEmploymentDetail } from 'services/people';
 import SelectDepartment from 'components/Common/SelectDepartment';
+import SelectPeopleManager from 'components/Common/SelectPeopleManager'
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-const EmployeeEditModal = ({ visible, handleOk, department, handleCancel, activeCompany, ...props }) => {
+const EmployeeEditModal = ({ visible, handleOk, people, department, handleCancel, activeCompany, ...props }) => {
   const [loader, setLoader] = useState(false);
   const { getFieldDecorator, setFieldsValue } = props.form;
   const { employmentDetails, token, params, updateSavedObj } = props;
@@ -69,7 +70,7 @@ const EmployeeEditModal = ({ visible, handleOk, department, handleCancel, active
             <FormItem label="Department" className="display-block">
               {getFieldDecorator("department", {
                 rules: [
-                  { required: true, message: "Please select department!" },
+                  // { required: true, message: "Please select department!" },
                 ],
               })(
                 <SelectDepartment selected={department} />
@@ -80,13 +81,14 @@ const EmployeeEditModal = ({ visible, handleOk, department, handleCancel, active
             <FormItem label="Manager" className="display-block">
               {getFieldDecorator("manager", {
                 rules: [
-                  { required: true, message: "Please input manager name!" },
+                  // { required: true, message: "Please input manager name!" },
                 ],
               })(
-                <Select placeholder="Select Manager">
-                  <Option value="A">A</Option>
-                  <Option value="B">B</Option>
-                </Select>
+                <SelectPeopleManager people={people} onChange={(e) => {
+                  setFieldsValue({
+                    manager: e
+                  })
+                }} />
               )}
             </FormItem>
           </Col>

@@ -115,7 +115,7 @@ const Basics = (props) => {
             <FormItem label="Date of birth" className="display-block">
               {getFieldDecorator("dob", {
                 rules: [{ required: true, message: "Please input birthdate!" }],
-              })(<DatePicker format={'DD-MM-YYYY'} style={{ width: "100%" }} />)}
+              })(<DatePicker format={'MM-DD-YYYY'} style={{ width: "100%" }} />)}
             </FormItem>
           </Col>
           <Col span={8} xs={24} md={8}>

@@ -28,7 +28,7 @@ const SelectPeopleMnager = ({
                     people && people.length ?
                         people.map((j, i) => {
                             return (
-                                <Option value={j.user.uid} key={i}>{j.firstName + j.lastName}</Option>
+                                <Option value={j.user.uid} key={i}>{j.firstName + ' ' + j.lastName}</Option>
                             )
                         }) : ""
                 }

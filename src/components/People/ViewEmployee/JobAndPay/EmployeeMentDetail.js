@@ -3,7 +3,7 @@ import { Icon } from "antd";
 import { dateFormat } from 'util/constant';
 import EmployeeEditModal from "./EditModals/EmployeeEditModal";
 
-const EmployeeMentDetail = ({ employment, department, token, params, updateSavedObj, jobs, activeCompany }) => {
+const EmployeeMentDetail = ({ employment, people, department, token, params, updateSavedObj, jobs, activeCompany }) => {
   const [isEdit, setIsEdit] = useState(false);
   console.log('employement details')
   console.log('employment', employment)
@@ -66,6 +66,7 @@ const EmployeeMentDetail = ({ employment, department, token, params, updateSaved
           employmentDetails={employment}
           token={token}
           params={params}
+          people={people}
           department={department}
           updateSavedObj={updateSavedObj}
           jobs={jobs}

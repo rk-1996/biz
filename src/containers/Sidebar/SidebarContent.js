@@ -134,27 +134,36 @@ const SidebarContent = (props) => {
             {
               (auth.authUser.user.companies.map((val, index) => {
                 return (val.permissions === "admin") ?
-                  <Menu.Item key="people">
-                    <Link to="/people"><i className="icon icon-avatar -flex-column-reverse" />
-                      <span><IntlMessages id="sidebar.people" /></span></Link>
-                  </Menu.Item> : ''
+                  <Menu
+                    defaultOpenKeys={[defaultOpenKeys]}
+                    selectedKeys={[selectedKeys]}
+                    theme={themeType === THEME_TYPE_LITE ? 'lite' : 'lite'}
+                    mode="inline">
+                    <Menu.Item key="people">
+                      <Link to="/people"><i className="icon icon-avatar -flex-column-reverse" />
+                        <span><IntlMessages id="sidebar.people" /></span></Link>
+                    </Menu.Item>
+                    <Menu.Item key="settings">
+                      <Link to="/settings"><i className="icon icon-setting" />
+                        <span><IntlMessages id="sidebar.settings" /></span></Link>
+                    </Menu.Item>
+                    <MenuItemGroup key="main" className="gx-menu-group" title={<IntlMessages id="sidebar.superadmin" />}>
+                      <Menu.Item key="superadmin/companies">
+                        <Link to="/superadmin/companies"><i className="icon icon-company" />
+                          <span><IntlMessages id="sidebar.companies" /></span></Link>
+                      </Menu.Item>
+                    </MenuItemGroup>
+                  </Menu>
+                  : ''
               }))
             }
 
-            <Menu.Item key="settings">
-              <Link to="/settings"><i className="icon icon-setting" />
-                <span><IntlMessages id="sidebar.settings" /></span></Link>
-            </Menu.Item>
+
             {/* <Menu.Item key="payroll">
               <Link to="/payroll"><i className="icon icon-widgets"/>
                 <span><IntlMessages id="sidebar.payroll"/></span></Link>
             </Menu.Item> */}
-            <MenuItemGroup key="main" className="gx-menu-group" title={<IntlMessages id="sidebar.superadmin" />}>
-              <Menu.Item key="superadmin/companies">
-                <Link to="/superadmin/companies"><i className="icon icon-company" />
-                  <span><IntlMessages id="sidebar.companies" /></span></Link>
-              </Menu.Item>
-            </MenuItemGroup>
+
           </Menu>
         </CustomScrollbars>
         <div className={`gx-sidebar-notifications ${getNoHeaderClass(navStyle)}`}>

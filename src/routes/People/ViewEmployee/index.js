@@ -18,7 +18,7 @@ const ViewEmployee = (props) => {
   const [employeeData, setEmployeeData] = useState(null);
   const [loading, setLoading] = useState(false);
   const { match: { params }, authUser, jobs, departments, activeCompany } = props;
-
+  console.log(employeeData)
   useEffect(() => {
     const getDetails = async () => {
       const obj = {
@@ -65,10 +65,24 @@ const ViewEmployee = (props) => {
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
+
       {loading && <AppLoader />}
       {
         employeeData &&
         <Card className="gx-card">
+          <div className='align-center flex-x'>
+            <div className='employee-details-profile-div'>
+              <img className='border-radius-50' src={require("assets/images/avatar/domnic-harris.png")} />
+            </div>
+            <div>
+              <div>
+                <span>{employeeData.firstName + ' ' + employeeData.firstName}</span>
+              </div>
+              <div>
+
+              </div>
+            </div>
+          </div>
           <Tabs className='tab-modal-timesheet' activeKey={formTab} onChange={onChangeFormTab}>
             <TabPane tab="Jobs & Pay" key={1}>
               <JobsAndPay

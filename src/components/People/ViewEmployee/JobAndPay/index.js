@@ -14,6 +14,7 @@ import SelectJob from 'components/Common/SelectJob';
 import SelectDepartment from 'components/Common/SelectDepartment';
 import AddAdditionalLocationEmployee from './AddAdditionalLocationEmployee'
 import AddAdditionalLocationComoansation from './AddAdditionalLocationCompansation'
+import { getPeopleRequest } from "appRedux/actions/People";
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -29,6 +30,7 @@ const JobsAndPay = ({
   jobs,
   people,
   departments,
+  getPeopleRequest,
   form
 }) => {
   const { params } = match;
@@ -53,7 +55,22 @@ const JobsAndPay = ({
   });
 
   const history = useHistory();
-
+  const activeCompanyName = activeCompany.company
+  const activeLocation = activeCompany.location
+  useEffect(() => {
+    const getCompany = companies.find(a => a.cid === activeCompany.company);
+    if (getCompany && getCompany.locations && getCompany.locations.length && getCompany.locations[0]) {
+      const getLocationId = activeLocation ? activeLocation : getCompany.locations[0].lid
+      const obj = {
+        company: activeCompany.company,
+        dissmissed: false,
+        location: getLocationId
+      };
+      getPeopleRequest(obj);
+    } else {
+      message.error('No Location found!');
+    }
+  }, [activeCompany, getPeopleRequest, companies, activeLocation]);
 
   const comparer = (otherArray) => {
     return function (current) {
@@ -367,6 +384,7 @@ const JobsAndPay = ({
                         employment={c.employment}
                         department={c.department}
                         activeCompany={activeCompany}
+                        people={people.people}
                       />
                       {/* Compensation */}
                       {
@@ -522,4 +540,4 @@ const mapStateToProps = ({ auth, common, people }) => {
   return { authUser, activeCompany, companies, departments, people, jobs };
 };
 
-export default connect(mapStateToProps)(withRouter(Form.create()(JobsAndPay)));
+export default connect(mapStateToProps, { getPeopleRequest })(withRouter(Form.create()(JobsAndPay)));

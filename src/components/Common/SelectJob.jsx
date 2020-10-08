@@ -28,7 +28,7 @@ const AddJob = ({ jobs, authUser, getJobRequest, activeCompany, selected, onChan
     setCreateJobLoader(true);
     const result = await createJob(authUser.tokens.accessToken, params);
     setCreateJobLoader(false);
-    if(result.status === 201) {
+    if (result.status === 201) {
       const params = {
         company: activeCompany
       }
@@ -40,40 +40,40 @@ const AddJob = ({ jobs, authUser, getJobRequest, activeCompany, selected, onChan
 
   return (
     <>
-    <Select
-      defaultValue={selected ? selected : null}
-      placeholder="Select Jobs"
-      onChange={onChangeSelect}
-      dropdownRender={menu => (
-        <div>
-          {menu}
-          <Divider style={{ margin: '4px 0' }} />
-          <div
-            style={{ padding: '4px 8px', cursor: 'pointer' }}
-            onMouseDown={e => e.preventDefault()}
-            onClick={() => setOpenModal(true)}
-          >
-            <Icon type="plus" /> Add Job
+      <Select
+        defaultValue={selected ? selected : null}
+        placeholder="Select Jobs"
+        onChange={onChangeSelect}
+        dropdownRender={menu => (
+          <div>
+            {menu}
+            <Divider style={{ margin: '4px 0' }} />
+            <div
+              style={{ padding: '4px 8px', cursor: 'pointer' }}
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => setOpenModal(true)}
+            >
+              <Icon type="plus" /> Add Job
           </div>
-        </div>
-      )}
-    >
-      {
-        jobs && jobs.length ?
-        jobs.map((j,i) => {
-          return (
-            <Option value={j.jobTitle} key={i}>{ j.jobTitle }</Option>
-          )
-        }) : ""
-      }
-    </Select>
-    <AddEditJobModal
-      title="Add New Job"
-      visible={openModal}
-      handleOk={createJobHandler}
-      handleCancel={() => setOpenModal(false)}
-      createJobLoader={createJobLoader}
-    />
+          </div>
+        )}
+      >
+        {
+          jobs && jobs.length ?
+            jobs.map((j, i) => {
+              return (
+                <Option value={j.jobTitle} key={i}>{j.jobTitle}</Option>
+              )
+            }) : ""
+        }
+      </Select>
+      <AddEditJobModal
+        title="Add New Job"
+        visible={openModal}
+        handleOk={createJobHandler}
+        handleCancel={() => setOpenModal(false)}
+        createJobLoader={createJobLoader}
+      />
     </>
   );
 };
@@ -84,8 +84,8 @@ const mapStateToProps = (state) => {
     activeCompany: state.common.activeCompany.company,
     authUser: state.auth.authUser
   }
- };
+};
 
- export default connect(mapStateToProps, {
+export default connect(mapStateToProps, {
   getJobRequest
- })(AddJob);
+})(AddJob);

@@ -3,6 +3,7 @@ import { Icon } from "antd";
 import ContractorDetailsEditModal from "./../EditModals/ContractorDetailsEditModal";
 
 const ContractorDetail = ({ compensation }) => {
+  console.log('compensation', compensation)
   const [isEdit, setIsEdit] = useState(false);
   return (
     <div>

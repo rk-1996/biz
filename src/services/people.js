@@ -320,7 +320,7 @@ export const addContractorLocation = (token, params, data) => {
 export const updateContractorDetail = (token, params, data) => {
   setHeadersWithAccessToken(token);
   return axios
-    .put(`${API_BASE}/contractor/update-contractor/${params.user}/${params.company}`, data)
+    .put(`${API_BASE}/contractor/update/${params.user}/${params.company}`, data)
     .then(e => e)
     .catch(e => e);
 }
