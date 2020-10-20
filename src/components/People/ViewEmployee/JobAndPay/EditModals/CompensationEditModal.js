@@ -17,7 +17,7 @@ const CompensationEditModal = ({
 }) => {
   const [loader, setLoader] = useState(false);
   const { getFieldDecorator, setFieldsValue } = props.form;
-  const { compensation, token, deleteCompensation, params, updateSavedObj, jobs, departments } = props;
+  const { loadingDeleteCompensation, compensation, token, deleteCompensation, params, updateSavedObj, jobs, departments } = props;
 
   useEffect(() => {
     if (compensation) {
@@ -53,8 +53,8 @@ const CompensationEditModal = ({
         const result = await updateCompansationDetail(token, {
           ...obj,
           id: params.id,
-          location: activeCompany.location,
-          company: activeCompany.company,
+          location: compensation.location,
+          company: compensation.company,
           actionType: "employee",
         });
         setLoader(false);
@@ -66,9 +66,9 @@ const CompensationEditModal = ({
     });
   };
 
-  const handleDelete = (e) => {
+  const handleDelete = (e, id) => {
     e.preventDefault()
-    deleteCompensation()
+    deleteCompensation(id)
   }
 
   return (
@@ -173,7 +173,9 @@ const CompensationEditModal = ({
             >
               Cancel
             </Button>
-            <Button onClick={handleDelete} className="login-form-button" type="danger">
+            <Button
+              loading={loadingDeleteCompensation}
+              onClick={(e) => handleDelete(e, compensation.coid)} className="login-form-button" type="danger">
               {/* <Icon type="delete" className="cursor-pointer" /> */}
                 Delete
               </Button>

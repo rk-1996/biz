@@ -12,9 +12,10 @@ const EmployeeEditModal = ({ visible, handleOk, people, department, handleCancel
   const [loader, setLoader] = useState(false);
   const { getFieldDecorator, setFieldsValue } = props.form;
   const { employmentDetails, token, params, updateSavedObj } = props;
-
+  console.log('employmentDetails', employmentDetails)
   useEffect(() => {
     if (employmentDetails) {
+      console.log('employmentDetails', employmentDetails)
       setFieldsValue({
         pin: employmentDetails.pin,
         manager: employmentDetails.manager,
@@ -98,7 +99,7 @@ const EmployeeEditModal = ({ visible, handleOk, people, department, handleCancel
                 rules: [
                   { required: true, message: "Please input start date!" },
                 ],
-              })(<DatePicker format="DD/MM/YYYY" style={{ width: "100%" }} />)}
+              })(<DatePicker format="DD-MM-YYYY" style={{ width: "100%" }} />)}
             </FormItem>
           </Col>
           <Col span={12} xs={24} md={12}>

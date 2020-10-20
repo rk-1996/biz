@@ -42,6 +42,7 @@ const JobsAndPay = ({ people, contractorData, companies, updateSavedObj, activeC
         empid: params.id
       }
       const result = await getContractorCompesastion(authUser.tokens.accessToken, data);
+      console.log(data)
       if (result && result.status === 200) {
 
         let newAddedData = []
@@ -145,8 +146,17 @@ const JobsAndPay = ({ people, contractorData, companies, updateSavedObj, activeC
     }
   }
 
-  const updateCompensation = () => {
+  const updateCompensation = (data) => {
+    console.log('data in compensation', data)
     getCompesastionDetails()
+  }
+
+  const updateContractorDetails = async (data) => {
+    let dataObj = {
+      company: activeCompany.company,
+      location: addLocationStatus.lid,
+      pin: data.pin
+    }
   }
 
   const onCompleteDetail = async (data, step) => {
@@ -232,7 +242,7 @@ const JobsAndPay = ({ people, contractorData, companies, updateSavedObj, activeC
                       </div>
                       <div className="gx-ml-2">{c.locationName}</div>
                     </div>
-                    <ContractorDetail compensation={c} />
+                    <ContractorDetail token={authUser.tokens.accessToken} contractorData={contractorData} activeCompany={activeCompany} compensation={c} updateSavedObj={updateContractorDetails} />
                     {
                       compensation &&
                       <Compensation

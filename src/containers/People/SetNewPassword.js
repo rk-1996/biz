@@ -16,7 +16,7 @@ const SetNewPassword = (props) => {
   const { showMessage, loader, alertMessage, match: { params } } = props;
   const [userData, setUserData] = useState('')
   const [loading, setLoading] = useState(false);
-
+  const [currentLocation, setCurrentLocation] = useState('')
   const history = useHistory();
   console.log('params', params)
   useEffect(async () => {
@@ -30,7 +30,7 @@ const SetNewPassword = (props) => {
         token: params.token
       }
       let resultGetData = await getUserDataByToken(dataObj)
-      console.log(resultGetData)
+      console.log(resultGetData.locations)
       if (resultGetData.status == 200) {
         if (resultGetData.data.message === 'Invalid Token') {
           message.success('Invailid token.')
@@ -41,6 +41,9 @@ const SetNewPassword = (props) => {
 
           setLoading(false)
           setUserData(resultGetData.data)
+          resultGetData.data.locations.map((val, ind) => {
+            setCurrentLocation(val.location.name)
+          })
         }
       }
     } catch (error) {
@@ -53,7 +56,12 @@ const SetNewPassword = (props) => {
   }, [setFieldsValue]);
 
   useEffect(() => {
-    console.log(userData)
+    console.log(userData.locations)
+    // if (userData.locations) {
+    //   userData.locations.map((val, ind => {
+    //     console.log(val)
+    //   }))
+    // }
   }, [userData])
 
   const handleSubmit = (e) => {
@@ -113,7 +121,7 @@ const SetNewPassword = (props) => {
           >
             <div className="gx-pb-5">
               <div className="gx-fs-xxl text-center">Welcome to</div>
-              <div className="gx-fs-xlxl text-center">Cafe Basil</div>
+              <div className="gx-fs-xlxl text-center">{currentLocation}</div>
               <div className="gx-pt-4 gx-fs-lg gx-pb-4">
 
                 Hello, {userData.email}!

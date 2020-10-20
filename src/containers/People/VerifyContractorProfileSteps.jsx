@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { message } from "antd";
 
 const VerifyProfileSteps = (props) => {
+  console.log("props", props)
   const [currentStep, setCurrentStep] = useState('welcome');
   const [formValues, setFormValues] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -45,9 +46,11 @@ const VerifyProfileSteps = (props) => {
 
   const updateContractor = async () => {
     const obj = {
-      user: params.token,
-      company: authUser.user.companies[0].company,
+      user: formValues.user.companies[0].company,
+      company: formValues.user.locations[0].location.lid,
     }
+    console.log('user', formValues.user.companies[0].company)
+    console.log('company', formValues.user.locations[0].location.lid)
     const response = await updateContractorDetail(authUser.tokens.accessToken, obj, formValues);
     if (response.status === 200 || response.status === 201) {
       message.success("Contractor data successfully updated.");

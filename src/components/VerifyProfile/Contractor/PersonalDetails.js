@@ -66,13 +66,19 @@ const PersonalDetails = (props) => {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
+        // const emergencyInfo = {
+        //   fullName: values.emergencyFullName ? values.emergencyFullName : undefined,
+        //   relation: values.emergencyRelationship ? values.emergencyRelationship : undefined,
+        //   phone: values.emergencyPhone ? +values.emergencyPhone : undefined,
+        //   email: values.emergencyEmail ? values.emergencyEmail : undefined
+        // }
         const emergencyInfo = {
-          fullName: values.emergencyFullName ? values.emergencyFullName : undefined,
-          relation: values.emergencyRelationship ? values.emergencyRelationship : undefined,
-          phone: values.emergencyPhone ? +values.emergencyPhone : undefined,
-          email: values.emergencyEmail ? values.emergencyEmail : undefined
+          fullName: "undefined",
+          relation: "undefined",
+          phone: 1234567899,
+          email: "raj@gmail.com"
         }
-        Object.keys(emergencyInfo).forEach(key => emergencyInfo[key] === undefined && delete emergencyInfo[key]);
+        // Object.keys(emergencyInfo).forEach(key => emergencyInfo[key] === undefined && delete emergencyInfo[key]);
 
         let newObj = {
           dob: values.dob ? moment(values.dob._d, "YYYY-MM-DD") : null,
@@ -90,16 +96,20 @@ const PersonalDetails = (props) => {
             street2: values.street2 ? values.street2 : undefined,
             zip: values.zip ? +values.zip : undefined
           },
-          compensation: {
-            startDate: values.startDate ? moment(values.startDate._d, "YYYY-MM-DD") : null,
-          }
+          // compensation: {
+          //   effectiveDate: values.startDate ? moment(values.startDate._d, "YYYY-MM-DD") : moment(new Date()).format("YYYY-MM-DD"),
+          // }
         }
-        if (Object.keys(emergencyInfo).length > 0) {
-          newObj = {
-            ...newObj,
-            emergencyInfo
-          }
+        newObj = {
+          ...newObj,
+          emergencyInfo
         }
+        // if (Object.keys(emergencyInfo).length > 0) {
+        //   newObj = {
+        //     ...newObj,
+        //     emergencyInfo
+        //   }
+        // }
         completedStep({
           ...newObj,
           type
@@ -148,7 +158,7 @@ const PersonalDetails = (props) => {
                   </Col>
                   <Col span={8} xs={24} md={8}>
                     <FormItem label="Middle Name" className="display-block">
-                      {getFieldDecorator("middleName")(<Input type="text" placeholder="Phone Number" />)}
+                      {getFieldDecorator("middleName")(<Input type="text" placeholder="Middle Name" />)}
                     </FormItem>
                   </Col>
                   <Col span={8} xs={24} md={8}>
@@ -167,10 +177,11 @@ const PersonalDetails = (props) => {
                     <FormItem label="Phone Number" className="display-block">
                       {getFieldDecorator("phone", {
                         rules: [
-                          { min: 10, message: "Min length 10 is required!" },
-                          { max: 10, message: "Max length 10 is required!" },
+                          // { min: 10, message: "Min length 10 is required!" },
+                          // { max: 10, message: "Max length 10 is required!" },
                           {
                             required: true,
+                            pattern: new RegExp("^([0|\+[0-9]{1,5})?([0-9][0-9]{9})$"),
                             message: "Please input phone number!",
                           },
                         ],
@@ -315,9 +326,13 @@ const PersonalDetails = (props) => {
                       <FormItem label="Zip" className="display-block">
                         {getFieldDecorator("zip", {
                           rules: [
-                            { min: 5, message: "Min length 5 is required!" },
-                            { max: 5, message: "Max length 5 is required!" },
-                            { required: true, message: "Please input your zip!" },
+                            // { min: 5, message: "Min length 5 is required!" },
+                            // { max: 5, message: "Max length 5 is required!" },
+                            {
+                              required: true,
+                              // pattern: new RegExp("^(\d{5})?$"),
+                              message: "Please input your zip!",
+                            },
                           ],
                         })(<Input type="text" placeholder="Zip" />)}
                       </FormItem>

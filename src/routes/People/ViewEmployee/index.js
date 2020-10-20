@@ -76,7 +76,7 @@ const ViewEmployee = (props) => {
             </div>
             <div>
               <div>
-                <span>{employeeData.firstName + ' ' + employeeData.firstName}</span>
+                <span>{employeeData.firstName + ' ' + employeeData.lastName}</span>
               </div>
               <div>
 

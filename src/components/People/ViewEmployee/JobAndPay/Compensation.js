@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Icon, Button, Modal } from "antd";
-import { getCompansationHistory, deleteCompensation } from 'services/people';
+import { getCompansationHistory, deleteCompensationApi } from 'services/people';
 import CompensationEditModal from "./EditModals/CompensationEditModal";
 import { dateTimeFormat, dateFormat } from "util/constant";
 
@@ -9,6 +9,7 @@ const Compensation = ({ compensation, addCompenstationHandle, activeCompany, upd
   const [isEdit, setIsEdit] = useState(false);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [loadingDeleteCompensation, setLoadingDeleteCompensation] = useState(false)
 
   const getHistory = useCallback(async () => {
     const obj = {
@@ -35,14 +36,17 @@ const Compensation = ({ compensation, addCompenstationHandle, activeCompany, upd
   }
 
   const deleteCompensation = async (compId) => {
+    setLoadingDeleteCompensation(true)
+
     try {
       const obj = {
-        empid: params.id,
-        company: activeCompany.company,
-        location: activeCompany.location
+        id: compId
       }
-      const result = await deleteCompensation(token, { ...obj, actionType: 'contractor' });
+      const result = await deleteCompensationApi(token, { ...obj });
+      if (result) {
 
+        setLoadingDeleteCompensation(false)
+      }
     } catch (error) {
       console.log(error)
     }
@@ -181,6 +185,7 @@ const Compensation = ({ compensation, addCompenstationHandle, activeCompany, upd
       {
         isEdit && compensation &&
         <CompensationEditModal
+          loadingDeleteCompensation={loadingDeleteCompensation}
           deleteCompensation={deleteCompensation}
           compensation={compensation}
           visible={isEdit}

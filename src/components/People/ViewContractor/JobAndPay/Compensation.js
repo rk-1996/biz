@@ -2,13 +2,13 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Icon, Card, Button, Modal } from "antd";
 import CompensationEditModal from "./../EditModals/CompensationEditModal";
 import { dateFormat, dateTimeFormat } from "util/constant";
-import { getCompansationHistory, deleteCompensation } from 'services/people';
+import { getCompansationHistory, deleteCompensationApi } from 'services/people';
 
 const Compensation = ({ compensation, activeCompany, updateSavedObj, token, params, jobs, departments, CompensationsList }) => {
   const [history, setHistory] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-
+  const [loadingDeleteCompensation, setLoadingDeleteCompensation] = useState(false)
   const getHistory = useCallback(async () => {
     const obj = {
       empid: params.id,
@@ -24,14 +24,18 @@ const Compensation = ({ compensation, activeCompany, updateSavedObj, token, para
   }, [params, token]);
 
   const deleteCompensation = async (compId) => {
+    setLoadingDeleteCompensation(true)
     try {
       const obj = {
-        empid: params.id,
-        company: activeCompany.company,
-        location: activeCompany.location
+        id: compId
       }
-      const result = await deleteCompensation(token, { ...obj, actionType: 'contractor' });
+      console.log("in api call delete compensation")
 
+      const result = await deleteCompensationApi(token, { ...obj });
+      if (result) {
+
+        setLoadingDeleteCompensation(false)
+      }
     } catch (error) {
       console.log(error)
     }
@@ -339,6 +343,7 @@ const Compensation = ({ compensation, activeCompany, updateSavedObj, token, para
         <CompensationEditModal
           compensation={compensation}
           deleteCompensation={deleteCompensation}
+          loadingDeleteCompensation={loadingDeleteCompensation}
           updateSavedObj={compensationEditHandler}
           token={token}
           params={params}

@@ -170,7 +170,10 @@ function* signInUserWithEmailPassword({ payload }) {
             yield put(push(`/people/verify-employee/${signInUser.data.user.uid}`));
           } else if (signInUser.data.user.companies && signInUser.data.user.companies.length && signInUser.data.user.companies[0].isDetailsConfirmed && (signInUser.data.user.companies[0].permissions === "owner" || signInUser.data.user.companies[0].permissions === "manager" || signInUser.data.user.companies[0].permissions === "employee")) {
             yield put(push("/overview"));
-          } else if (signInUser.data.user.companies && signInUser.data.user.companies.length && signInUser.data.user.companies[0] && !signInUser.data.user.companies[0].isDetailsConfirmed && signInUser.data.user.companies[0].type === "contractor") { // && signInUser.data.user.companies[0].permissions === "contractor"
+          } else if (signInUser.data.user.companies && signInUser.data.user.companies.length && signInUser.data.user.companies[0].isDetailsConfirmed && (signInUser.data.user.companies[0].permissions === "owner" || signInUser.data.user.companies[0].permissions === "basic" || signInUser.data.user.companies[0].permissions === "manager" || signInUser.data.user.companies[0].permissions === "contractor")) {
+            yield put(push("/overview"));
+          }
+          else if (signInUser.data.user.companies && signInUser.data.user.companies.length && signInUser.data.user.companies[0] && !signInUser.data.user.companies[0].isDetailsConfirmed && signInUser.data.user.companies[0].type === "contractor") { // && signInUser.data.user.companies[0].permissions === "contractor"
             yield put(push(`/people/verify-contractor/${signInUser.data.user.uid}`));
           }
           else if (signInUser.data.user.companies && signInUser.data.user.companies.length && signInUser.data.user.companies[0].permissions === "admin") {

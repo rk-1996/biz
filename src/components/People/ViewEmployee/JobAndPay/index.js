@@ -8,7 +8,7 @@ import moment from "moment";
 import {
   useHistory
 } from "react-router-dom";
-import { getEmployeeCompesastion, getCompansationHistory, updateCompansationDetail, editCompanyStatusForEmployee, addEmployeeLocation, getValidPin } from "services/people";
+import { getEmployeeCompesastion, getCompansationHistory, postCompensationDetails, updateCompansationDetail, editCompanyStatusForEmployee, addEmployeeLocation, getValidPin } from "services/people";
 import CircularProgress from "components/CircularProgress/index";
 import SelectJob from 'components/Common/SelectJob';
 import SelectDepartment from 'components/Common/SelectDepartment';
@@ -194,16 +194,21 @@ const JobsAndPay = ({
     //     ...data
     //   }
     // })
-
+    console.log('data.department', data.department)
     let obj = {
-
       jobTitle: data.jobTitle,
-      defaultHours: data.defaultHours,
-      type: data.type,
+      effectiveDate: data.effectiveDate,
+      emp_type: data.type,
+      department: data.department,
+      manager: data.manager,
       rate: data.rate,
       per: data.per,
-      reasonofChange: data.reasonofChange
-
+      type: data.employmentClass,
+      defaultHours: data.defaultHours,
+      // reasonofChange: data.reasonofChange,
+      hours: data.hours,
+      ssn: "SN33GFD",
+      defaultAmount: data.defaultAmount
     }
     let objParams = {
       id: params.id,
@@ -213,8 +218,9 @@ const JobsAndPay = ({
       user_id: employeeData.user.uid,
     }
     // console.log(obj)
-    const resultUpdateStatus = await updateCompansationDetail(authUser.tokens.accessToken, {
+    const resultUpdateStatus = await postCompensationDetails(authUser.tokens.accessToken, {
       ...obj,
+      user: employeeData.user.uid,
       id: params.id,
       company: activeCompany.company,
       actionType: "employee",
@@ -256,7 +262,7 @@ const JobsAndPay = ({
         type: data.employmentClass
       },
       compensation: {
-        // department: "Thai cuisine",
+        department: data.department,
         effectiveDate: new Date(moment(data.startDate._d).format("YYYY-MM-DD")).toISOString()
       }
     }
@@ -527,6 +533,7 @@ const JobsAndPay = ({
               setDisplayModalAddLocation={setDisplayModalAddLocationCompensation}
               people={people.people}
               onFinish={onFinish}
+            // department={c.department}
             />
         }
       </Modal>

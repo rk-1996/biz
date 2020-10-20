@@ -29,7 +29,7 @@ const CompensationEditModal = ({
   const [loader, setLoader] = useState(false);
   const [wageType, setWageType] = useState("fixed");
   const { getFieldDecorator, setFieldsValue } = props.form;
-  const { compensation, deleteCompensation, token, params, updateSavedObj } = props;
+  const { loadingDeleteCompensation, compensation, deleteCompensation, token, params, updateSavedObj } = props;
 
   useEffect(() => {
     if (compensation) {
@@ -56,9 +56,9 @@ const CompensationEditModal = ({
     }
   }, [compensation, setFieldsValue]);
 
-  const handleDelete = (e) => {
+  const handleDelete = (e, id) => {
     e.preventDefault()
-    deleteCompensation()
+    deleteCompensation(id)
   }
 
   const handleSubmit = (e) => {
@@ -223,7 +223,10 @@ const CompensationEditModal = ({
               Cancel
             </Button>
             {/* <Tooltip placement="top" title="Delete compensation"> */}
-            <Button onClick={handleDelete} className="login-form-button" type="danger">
+            <Button
+              loading={loadingDeleteCompensation}
+
+              onClick={(e) => handleDelete(e, compensation.coid)} className="login-form-button" type="danger">
               {/* <Icon type="delete" className="cursor-pointer" /> */}
                 Delete
               </Button>

@@ -3,12 +3,13 @@ import { Form, Modal, DatePicker, Row, Col, Input, Select, Button } from "antd";
 import moment from 'moment';
 import { updateEmploymentDetail } from 'services/people';
 import SelectJob from 'components/Common/SelectJob';
-
+import SelectDepartment from 'components/Common/SelectDepartment';
+import SelectPeopleManager from 'components/Common/SelectPeopleManager'
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
-const AddAdditionalLocationEmployee = ({ onFinish, jobs, setFormTab, onCompleteDetail, setDisplayModalAddLocation, activeCompany, ...props }) => {
+const AddAdditionalLocationEmployee = ({ onFinish, people, department, jobs, setFormTab, onCompleteDetail, setDisplayModalAddLocation, activeCompany, ...props }) => {
     const [loader, setLoader] = useState(false);
     const { getFieldDecorator, setFieldsValue } = props.form;
     const { token, params, updateSavedObj } = props;
@@ -97,11 +98,61 @@ const AddAdditionalLocationEmployee = ({ onFinish, jobs, setFormTab, onCompleteD
                         )}
                     </FormItem>
                 </Col>
+                <Col span={8} xs={24} md={12}>
+                    <FormItem label="Department" className="display-block">
+                        {getFieldDecorator("department", {
+                            rules: [
+                                // { required: true, message: "Please select department!" },
+                            ],
+                        })(
+                            <SelectDepartment selected={department} />
+                        )}
+                    </FormItem>
+                </Col>
+                <Col span={12} xs={24} md={12}>
+                    <FormItem label="Employee Class" className="display-block">
+                        {getFieldDecorator("employmentClass", {
+                            rules: [
+                                { required: true, message: "Please input employee class!" },
+                            ],
+                        })(
+                            <Select placeholder="Select Status">
+                                <Option value="Full Time(30+ Hours Per Week)">
+                                    Full Time(30+ Hours Per Week)
+                                </Option>
+                                <Option value="Part Time(20-29 Hours Per Week)">
+                                    Part Time(20-29 Hours Per Week)
+                                </Option>
+                                <Option value="Part Time(0-19 Hours Per Week)">
+                                    Part Time(0-19 Hours Per Week)
+                                </Option>
+                                <Option value="Seasonal (0-6 Months per year)">
+                                    Seasonal (0-6 Months per year)
+                                </Option>
+                            </Select>
+                        )}
+                    </FormItem>
+                </Col>
                 <Col span={12} xs={24} md={12}>
                     <FormItem label="Wage" className="display-block">
                         {getFieldDecorator("rate", {
                             rules: [{ required: true, message: "Please input wage!" }],
                         })(<Input style={{ width: "100%" }} prefix="$" />)}
+                    </FormItem>
+                </Col>
+                <Col span={12} xs={24} md={12}>
+                    <FormItem label="Manager" className="display-block">
+                        {getFieldDecorator("manager", {
+                            rules: [
+                                // { required: true, message: "Please input manager name!" },
+                            ],
+                        })(
+                            <SelectPeopleManager people={people} onChange={(e) => {
+                                setFieldsValue({
+                                    manager: e
+                                })
+                            }} />
+                        )}
                     </FormItem>
                 </Col>
                 <Col span={12} xs={24} md={12}>
@@ -122,6 +173,20 @@ const AddAdditionalLocationEmployee = ({ onFinish, jobs, setFormTab, onCompleteD
                     <FormItem label="Default Hours" className="display-block">
                         {getFieldDecorator("defaultHours")(
                             <Input type="text" placeholder="Default Hours" />
+                        )}
+                    </FormItem>
+                </Col>
+                <Col span={12} xs={24} md={12}>
+                    <FormItem label="Default Amount" className="display-block">
+                        {getFieldDecorator("defaultAmount")(
+                            <Input type="text" placeholder="Default Amount" />
+                        )}
+                    </FormItem>
+                </Col>
+                <Col span={12} xs={24} md={12}>
+                    <FormItem label="Hours" className="display-block">
+                        {getFieldDecorator("hours")(
+                            <Input type="text" placeholder="Hours" />
                         )}
                     </FormItem>
                 </Col>

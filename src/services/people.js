@@ -174,6 +174,26 @@ export const updateCompansationDetail = (token, params) => {
     .catch(e => e);
 };
 
+//post compensation employee/contractor
+export const postCompensationDetails = (token, params) => {
+  const { id, location, company } = params;
+  delete params.id;
+  // delete params.location;
+  // delete params.company;
+  let url = '';
+  if (params.actionType === 'employee') {
+    url = `/compenastion`
+  } else {
+    url = `/compenastion`
+  }
+  delete params.actionType;
+  setHeadersWithAccessToken(token);
+  return axios
+    .post(`${API_BASE}${url}`, params)
+    .then(e => e)
+    .catch(e => e);
+}
+
 
 // Update Personal Details
 
@@ -236,19 +256,23 @@ export const createPeoplePassword = (params) => {
 };
 
 //for delete compensation contractor
-export const deleteCompensation = (token, params) => {
+export const deleteCompensationApi = (token, params) => {
   setHeadersWithAccessToken(token);
-  if (params.type == 'employee') {
-    return axios
-      .post(`${API_BASE}/auth/create-password/${params.token}`, { password: params.password })
-      .then(e => e)
-      .catch(e => e);
-  } else {
-    return axios
-      .post(`${API_BASE}/auth/create-password/${params.token}`, { password: params.password })
-      .then(e => e)
-      .catch(e => e);
-  }
+  // if (params.type == 'employee') {
+  //   return axios
+  //     .post(`${API_BASE}/auth/create-password/${params.token}`, { password: params.password })
+  //     .then(e => e)
+  //     .catch(e => e);
+  // } else {
+  //   return axios
+  //     .post(`${API_BASE}/auth/create-password/${params.token}`, { password: params.password })
+  //     .then(e => e)
+  //     .catch(e => e);
+  // }
+  return axios
+    .delete(`${API_BASE}/compenastion/${params.id}`)
+    .then(e => e)
+    .catch(e => e);
 }
 
 // Get employee detail to verify
